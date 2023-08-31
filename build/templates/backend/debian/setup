@@ -14,8 +14,6 @@ echo -e "Copy Files and Directories..."
 $SUPERUSER mv backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 sudo mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf
 {{if .Backend.ExecScript }}sudo mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
-{{if .Backend.PostinstScriptTemplate}}
-$SUPERUSER bash -c "{{template "Backend.PostinstScriptTemplate" .}}"
-{{end}}
+$SUPERUSER bash -c "debian/postinst"
 
 {{end}}
