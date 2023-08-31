@@ -62,10 +62,6 @@ func main() {
         if err != nil {
         	panic(err)
         }
-//        err = os.RemoveAll(filepath.Join(outputDir, "backend/debian"))
-//        if err != nil {
-//                panic(err)
-//        }
         err = os.RemoveAll(filepath.Join(outputDir, "backend/config"))
         if err != nil {
                 panic(err)
