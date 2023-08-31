@@ -15,7 +15,6 @@ all:
 {{- end}}
 	mkdir backend
 	{{.Backend.ExtractCommand}} ${ARCHIVE}
-	rm -f ${ARCHIVE}
 	chmod 755 debian/setup
 	chmod 755 debian/run
 	chmod 755 debian/postinst
