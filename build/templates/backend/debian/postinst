@@ -23,6 +23,7 @@ if [[ "$PARAMS_CHECK" != "" ]]; then
     $SUPERUSER bash -c "cd backend && HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
   fi
   rm -rf backend
+  rm -rf ${ARCHIVE} 
 else
  echo -e " Checking PostinstScriptTemplate..."
  {{if .Backend.PostinstScriptTemplate}}
