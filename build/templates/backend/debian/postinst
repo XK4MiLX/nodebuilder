@@ -7,24 +7,20 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 ARCHIVE=$(basename {{.Backend.BinaryURL}})
-if [[ ! -d /tmp/backend ]]; then
-  echo -e "| Creating directory..."
-  mkdir -p /tmp/backend
-fi
-cd /tmp
+mkdir backend > /dev/null 2>&1
+wget --tries 5 {{.Backend.BinaryURL}} -q --show-progres > /dev/null 2>&1
+
 echo -e " Searching params script..."
 PARAMS_CHECK=$(bsdtar -ztvf ${ARCHIVE} |  grep '\-params' | head -n1)
 if [[ "$PARAMS_CHECK" != "" ]]; then
   STRIP=$(bsdtar -tvf ${ARCHIVE} | egrep '\-params$|\-params.sh$' | head -n1 | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar -C backend --strip $STRIP -xf ${ARCHIVE} > /dev/null 2>&1
-  PARAMS_PATH=$(find /tmp -not -path "*/share/*" -not -path "*/man/*" -type f -iname "*\-params*" | head -n1)
+  PARAMS_PATH=$(find backend -not -path "*/share/*" -not -path "*/man/*" -type f -iname "*\-params*" | head -n1)
   if [[ $PARAMS_PATH != "" ]]; then
     echo -e " FOUND: $PARAMS_PATH..."
     $SUPERUSER chmod +x $PARAMS_PATH
     echo -e " Lunching ${PARAMS_PATH##*/}...."
-    cd backend
-    $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
-    cd /tmp
+    $SUPERUSER bash -c "cd backend && HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
   fi
   rm -rf backend
 else
