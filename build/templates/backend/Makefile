@@ -16,7 +16,7 @@ all:
 	mkdir backend
 	{{.Backend.ExtractCommand}} ${ARCHIVE}
 	rm -f ${ARCHIVE}
-	chmod 755 debian/start
+	chmod 755 debian/setup
 {{- if .Backend.ExcludeFiles}}
 	# generated from exclude_files
 {{- range $index, $name := .Backend.ExcludeFiles}}
