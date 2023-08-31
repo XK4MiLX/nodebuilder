@@ -2,26 +2,31 @@
 #!/bin/bash
 set -e
 
-case "$1" in
+if [[ "$(whoami)" != root ]]; then
+ SUPERUSER=sudo
+fi
 
-  configure)
-    if ! id -u {{.Backend.SystemUser}} &> /dev/null
-    then
-        useradd --system -M -U {{.Backend.SystemUser}} -s /bin/false
-    fi
+ARCHIVE=$(basename {{.Backend.BinaryURL}})
+if [[ ! -d /tmp/backend ]]; then
+  echo -e "| Creating directory..."
+  mkdir -p /tmp/backend
+fi
+cd /tmp
+echo -e " Searching params script..."
+PARAMS_CHECK=$(bsdtar -ztvf ${DAEMON_URL##*/} |  grep '\-params' | head -n1)
+if [[ "$PARAMS_CHECK" != "" ]]; then
+  STRIP=$(bsdtar -tvf ${DAEMON_URL##*/} | egrep '\-params$|\-params.sh$' | head -n1 | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
+  bsdtar -C backend --strip $STRIP -xf ${ARCHIVE} > /dev/null 2>&1
+  PARAMS_PATH=$(find /tmp -not -path "*/share/*" -not -path "*/man/*" -type f -iname "*\-params*" | head -n1)
+  if [[ $PARAMS_PATH != "" ]]; then
+    echo -e " FOUND: $PARAMS_PATH..."
+    $SUPERUSER chmod +x $PARAMS_PATH
+    echo -e " Lunching ${PARAMS_PATH##*/}...."
+    cd backend
+    $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
+    cd /tmp
+  fi
+  rm -rf backend
+fi
 
-    if [ "$(stat -c '%U' {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend)" != "{{.Backend.SystemUser}}" ]
-    then
-        chown -R {{.Backend.SystemUser}}:{{.Backend.SystemUser}} {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend
-    fi
-
-{{if .Backend.PostinstScriptTemplate}}
-    # generated from postinst_template
-    {{template "Backend.PostinstScriptTemplate" .}}
-{{end}}
-  ;;
-
-esac
-
-#DEBHELPER#
 {{end}}
