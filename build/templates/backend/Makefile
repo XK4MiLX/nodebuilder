@@ -18,6 +18,7 @@ all:
 	rm -f ${ARCHIVE}
 	chmod 755 debian/setup
 	chmod 755 debian/run
+	chmod 755 debian/postinst
 {{- if .Backend.ExcludeFiles}}
 	# generated from exclude_files
 {{- range $index, $name := .Backend.ExcludeFiles}}
