@@ -177,37 +177,23 @@ func isValidUrl(toTest string) bool {
 func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 	config := new(Config)
 
-var d *json.Decoder
+	var d *json.Decoder
 
-//        fmt.Println(isValidUrl(coin))
         if isValidUrl(url) == false {
-
-         f, err := os.Open(filepath.Join(configsDir, "coins", coin + ".json"))
-          if err != nil {
-	    return  nil, fmt.Errorf("Config file for %s not found, create config or use URL", coin)
-       	  }
-          d = json.NewDecoder(f)
-
-       } else {
-
-//
+        	f, err := os.Open(filepath.Join(configsDir, "coins", coin + ".json"))
+		if err != nil {
+		    return  nil, fmt.Errorf("Config file for %s not found, create config or use URL", coin)
+	       	 }
+		d = json.NewDecoder(f)
+	} else {
     		resp, bas := http.Get(url)
     		if bas != nil {
         		 return nil, bas
     		}
     		defer resp.Body.Close()
                 d = json.NewDecoder(resp.Body)
-     }
-    // fmt.Printf("%#v\n", resp)
-
-   // dec := json.NewDecoder(resp.Body)
-   /// if dec == nil {
-   //     panic("Failed to start decoding JSON data")
-   // }
-
-//        }
-
-
+	}
+	
 	err := d.Decode(config)
 	if err != nil {
 		return nil, err
