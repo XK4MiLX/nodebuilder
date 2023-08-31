@@ -28,7 +28,7 @@ else
  {{- if .Backend.PostinstScriptTemplate}}
  echo -e " Checking PostinstScriptTemplate..."
  $SUPERUSER bash -c "{{template "Backend.PostinstScriptTemplate" .}}"
- {{- else }}
+ {{- else}}
  echo -e " PostinstScriptTemplate disabled..."
  {{- end}}
 fi
