@@ -2,9 +2,7 @@
 #!/bin/bash
 set -e
 
-if [[ "$(whoami)" == root ]]; then
- SUPERUSER=sudo
-else
+if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
