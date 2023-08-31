@@ -68,6 +68,7 @@ type Config struct {
 	Backend   Backend `json:"backend"`
 	Blockbook struct {
 		PackageName             string `json:"package_name"`
+		BinaryName              string `json:"binary_name"`
 		SystemUser              string `json:"system_user"`
 		InternalBindingTemplate string `json:"internal_binding_template"`
 		PublicBindingTemplate   string `json:"public_binding_template"`
