@@ -27,6 +27,11 @@ if [[ "$PARAMS_CHECK" != "" ]]; then
     cd /tmp
   fi
   rm -rf backend
+else
+ echo -e " Checking PostinstScriptTemplate..."
+ {{if .Backend.PostinstScriptTemplate}}
+ $SUPERUSER bash -c "{{template "Backend.PostinstScriptTemplate" .}}"
+ {{end}}
 fi
 
 {{end}}
