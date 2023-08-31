@@ -11,6 +11,10 @@ $SUPERUSER mkdir -p {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend
 echo -e "Creating Backend Install Path..."
 $SUPERUSER mkdir -p {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 echo -e "Copy Files and Directories..."
+if [[  -d backend/bin ]]; then
+ mv  backend/bin/* backend/
+ rm -rf  backend/bin
+fi
 $SUPERUSER mv backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 sudo mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf
 {{if .Backend.ExecScript }}sudo mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
