@@ -25,10 +25,12 @@ if [[ "$PARAMS_CHECK" != "" ]]; then
   rm -rf backend
   rm -rf ${ARCHIVE} 
 else
+ {{- if .Backend.PostinstScriptTemplate}}
  echo -e " Checking PostinstScriptTemplate..."
- {{if .Backend.PostinstScriptTemplate}}
  $SUPERUSER bash -c "{{template "Backend.PostinstScriptTemplate" .}}"
- {{end}}
+ {{- else }}
+ echo -e " PostinstScriptTemplate disabled..."
+ {{- end}}
 fi
 
 {{end}}
