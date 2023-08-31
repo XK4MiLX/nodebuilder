@@ -26,7 +26,7 @@
     "binary_url": "https://github.com/SINOVATEblockchain/sinovate/releases/download/v24.1.1/sinovate-v24.1.1-x64-linux-gnu-with-cli-tools.tar.gz",
     "verification_type": "sha256",
     "verification_source": "28d8057bb92f390a792137aa7b3ab3aa6f77e2bbd17482a5237fbdd3a2775f1d",
-    "extract_command": "bsdtar -C backend -xf"",
+    "extract_command": "bsdtar -C backend -xf",
     "exclude_files": [
       "sin-qt"
     ],
