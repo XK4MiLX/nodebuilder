@@ -18,6 +18,7 @@ import (
 // Backend contains backend specific fields
 type Backend struct {
 	PackageName                     string             `json:"package_name"`
+	BinaryName                      string             `json:"binary_name"`
 	PackageRevision                 string             `json:"package_revision"`
 	SystemUser                      string             `json:"system_user"`
 	Version                         string             `json:"version"`
