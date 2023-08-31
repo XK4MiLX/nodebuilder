@@ -1,0 +1,8 @@
+{{define "main" -}}
+#!/bin/bash
+set -e
+if [[ "$(whoami)" != root ]]; then
+ SUPERUSER=sudo
+fi
+$SUPERUSER bash "{{template "Backend.ExecCommandTemplate" .}}"
+{{end}}
