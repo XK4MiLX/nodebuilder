@@ -7,7 +7,7 @@ import (
 	"strings"
         "log"
         "io/ioutil"
-	"github.com/trezor/blockbook/build/tools"
+	"./build"
 )
 
 const (
