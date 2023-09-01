@@ -27,10 +27,7 @@
     "verification_type": "sha256",
     "verification_source": "4a56e2cdaa12eaf30aab4acf676770181b46545d3cf6deb25b50bc81c55fb2b3",
     "extract_command": "tar -C backend --strip 1 -xf",
-    "exclude_files": [
-      "pivx",
-      "man"
-    ],
+    "exclude_files": [],
     "exec_command_template": "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/bin/pivxd -datadir={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf -pid=/run/{{.Coin.Alias}}/{{.Coin.Alias}}.pid",
     "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
     "postinst_script_template": "",
