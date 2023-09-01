@@ -7,17 +7,18 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 ARCHIVE=$(basename {{.Backend.BinaryURL}})
-echo -e " Searching params script..."
+echo -e "Searching params script..."
 PARAMS_CHECK=$(bsdtar -ztvf ${ARCHIVE} |  grep '\-params' | head -n1)
 if [[ "$PARAMS_CHECK" != "" ]]; then
+  mkdir backend > /dev/null 2>&1
   STRIP=$(bsdtar -tvf ${ARCHIVE} | egrep '\-params$|\-params.sh$' | head -n1 | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar -C backend --strip $STRIP -xf ${ARCHIVE} > /dev/null 2>&1
   cd backend
   PARAMS_PATH=$(find . -not -path "*/share/*" -not -path "*/man/*" -type f -iname "*\-params*" | head -n1)
   if [[ $PARAMS_PATH != "" ]]; then
-    echo -e " FOUND: $PARAMS_PATH..."
+    echo -e "FOUND: $PARAMS_PATH..."
     $SUPERUSER chmod +x $PARAMS_PATH
-    echo -e " Lunching ${PARAMS_PATH##*/}...."
+    echo -e "Lunching ${PARAMS_PATH##*/}...."
     $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
   fi
   rm -rf ${ARCHIVE}
@@ -27,7 +28,7 @@ else
  echo -e " Checking PostinstScriptTemplate..."
  $SUPERUSER bash -c "{{template "Backend.PostinstScriptTemplate" .}}"
  {{- else}}
- echo -e " PostinstScriptTemplate disabled..."
+ echo -e "PostinstScriptTemplate disabled..."
  {{- end}}
 fi
 
