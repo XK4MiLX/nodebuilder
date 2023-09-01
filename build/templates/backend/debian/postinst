@@ -7,9 +7,6 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 ARCHIVE=$(basename {{.Backend.BinaryURL}})
-mkdir backend > /dev/null 2>&1
-wget --tries 5 {{.Backend.BinaryURL}} -q --show-progres > /dev/null 2>&1
-
 echo -e " Searching params script..."
 PARAMS_CHECK=$(bsdtar -ztvf ${ARCHIVE} |  grep '\-params' | head -n1)
 if [[ "$PARAMS_CHECK" != "" ]]; then
@@ -22,8 +19,8 @@ if [[ "$PARAMS_CHECK" != "" ]]; then
     echo -e " Lunching ${PARAMS_PATH##*/}...."
     $SUPERUSER bash -c "cd backend && HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend $PARAMS_PATH"
   fi
+  rm -rf ${ARCHIVE}
   rm -rf backend
-  rm -rf ${ARCHIVE} 
 else
  {{- if .Backend.PostinstScriptTemplate}}
  echo -e " Checking PostinstScriptTemplate..."
