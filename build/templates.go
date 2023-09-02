@@ -13,6 +13,8 @@ import (
 	"time"
         "net/http"
         "net/url"
+	"net"
+	"strings"
 )
 
 // Backend contains backend specific fields
@@ -34,6 +36,7 @@ type Backend struct {
 	ServiceType                     string             `json:"service_type"`
 	ServiceAdditionalParamsTemplate string             `json:"service_additional_params_template"`
 	ProtectMemory                   bool               `json:"protect_memory"`
+	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
 	ServerConfigFile                string             `json:"server_config_file"`
 	ClientConfigFile                string             `json:"client_config_file"`
@@ -68,7 +71,6 @@ type Config struct {
 	Backend   Backend `json:"backend"`
 	Blockbook struct {
 		PackageName             string `json:"package_name"`
-		BinaryName              string `json:"binary_name"`
 		SystemUser              string `json:"system_user"`
 		InternalBindingTemplate string `json:"internal_binding_template"`
 		PublicBindingTemplate   string `json:"public_binding_template"`
@@ -160,6 +162,55 @@ func copyNonZeroBackendFields(toValue *Backend, fromValue *Backend) {
 	}
 }
 
+func checkIPAddress(ip string) (result bool) {
+    if net.ParseIP(ip) == nil {
+       // fmt.Printf("IP Address: %s - Invalid\n", ip)
+        return false
+    } else {
+       // fmt.Printf("IP Address: %s - Valid\n", ip)
+    }
+   return true
+}
+
+func printResponse(url string) (retErr error, result string) {
+    resp, err := http.Get(url)
+    if err != nil {
+        return err, ""
+    }
+    defer func() {
+        err := resp.Body.Close()
+        if err != nil && retErr == nil {
+            retErr = err
+        }
+    }()
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return err, ""
+    }
+    ip := strings.Trim(string(body[:]), "\n")
+    return nil, ip
+}
+
+func getPublicIP() (ip string) {
+        var PublicIP string
+        var urls = []string{
+                "https://api4.my-ip.io/ip",
+                "https://checkip.amazonaws.com",
+                "https://api.ipify.or",
+        }
+        for _, url := range urls {
+                err, result := printResponse(url)
+                if err == nil {
+                  if checkIPAddress(result) == true {
+                     PublicIP = result
+                     break
+                  }
+                }
+        }
+ return PublicIP
+}
+
+
 func isValidUrl(toTest string) bool {
 	_, err := url.ParseRequestURI(toTest)
 	if err != nil {
@@ -213,6 +264,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 
 	config.Meta.BuildDatetime = time.Now().Format("Mon, 02 Jan 2006 15:04:05 -0700")
 	config.Env.Architecture = runtime.GOARCH
+	config.Backend.PublicIP = getPublicIP()
 
 	if !isEmpty(config, "backend") {
 		// set platform specific fields to config
