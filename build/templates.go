@@ -61,6 +61,7 @@ type Config struct {
 		BackendAuthRpc      int `json:"backend_authrpc"`
 		BlockbookInternal   int `json:"blockbook_internal"`
 		BlockbookPublic     int `json:"blockbook_public"`
+		ExternalPort        int `json:"external_port"`
 	} `json:"ports"`
 	IPC struct {
 		RPCURLTemplate              string `json:"rpc_url_template"`
