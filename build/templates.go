@@ -248,7 +248,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 	config.Env.Architecture = runtime.GOARCH
 	config.Backend.PublicIP = getPublicIP()
 	if os.Getenv("KEY") != "" {
-	  //config.Backend.Masternode.KeyValue = os.Getenv("KEY")
+	  config.Backend.Masternode.KeyValue = os.Getenv("KEY")
         }
 
 	if !isEmpty(config, "backend") {
