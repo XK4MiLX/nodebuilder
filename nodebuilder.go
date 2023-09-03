@@ -27,24 +27,10 @@ func main() {
 			return nil
 		})
 		fmt.Fprintf(os.Stderr, "Usage: %s coin\nCoin is one of:\n%v\n", filepath.Base(os.Args[0]), coins)
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	coin := os.Args[1]
-
-        if coin == "list" {
-        	files, err := ioutil.ReadDir("configs/coins")
-        	if err != nil {
-          		log.Fatal(err)
-        	}
-
-    		for _, file := range files {
-        	fmt.Println(strings.ReplaceAll(file.Name(), ".json", ""))
-    		}
-          os.Exit(0)
-        }
-
-
         var url string
         if len(os.Args) > 2 {
           url = os.Args[2]
