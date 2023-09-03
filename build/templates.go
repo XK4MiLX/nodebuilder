@@ -40,6 +40,7 @@ type Backend struct {
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
 	NodeKey                         string             `json:"node_key"`
+	NodeType                        string             `json:"node_type"`
 	ServerConfigFile                string             `json:"server_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
