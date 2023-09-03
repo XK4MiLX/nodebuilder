@@ -6,14 +6,12 @@
     "alias": "blocx"
   },
   "ports": {
-    "backend_rpc": 8058,
-    "backend_message_queue": 38358,
-    "external_port": 12972  
+    "backend_rpc": 12972,
+    "backend_message_queue": 38358, 
   },
   "ipc": {
     "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
     "rpc_user": "rpc",
-    "rpc_pass": "rpc",
     "rpc_timeout": 25,
     "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}"
   },
@@ -41,6 +39,7 @@
     "server_config_file": "bitcoin_like.conf",
     "additional_params": {
       "znode": 1,
+      "rpcallowip": "127.0.0.1",
       "logtimestamps": 1
     }
   }
