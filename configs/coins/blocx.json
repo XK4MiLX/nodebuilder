@@ -37,7 +37,9 @@
     "server_config_file": "blocx.conf",
     "additional_params": {
       "znode": 1,
-      "logtimestamps": 1
+      "logtimestamps": 1,
+      "znodeblsprivkey": "{{.Backend.NoneKey}}",
+      "externalip": "{{.Backend.PublicIP}}:{{.Ports.ExternalPort}}"
     }
   }
 }
