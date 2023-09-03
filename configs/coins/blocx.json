@@ -34,7 +34,7 @@
     "service_additional_params_template": "",
     "protect_memory": false,
     "mainnet": true,
-    "server_config_file": "blocx.conf",
+    "server_config_file": "bitcoin_like.conf",
     "additional_params": {
       "znode": 1,
       "logtimestamps": 1,
