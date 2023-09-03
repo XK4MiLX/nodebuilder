@@ -39,8 +39,8 @@ type Backend struct {
 	ProtectMemory                   bool               `json:"protect_memory"`
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
+	NodeType                        string             `json:"node_type"`
 	ServerConfigFile                string             `json:"server_config_file"`
-	ClientConfigFile                string             `json:"client_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
 }
@@ -59,8 +59,6 @@ type Config struct {
 		BackendP2P          int `json:"backend_p2p"`
 		BackendHttp         int `json:"backend_http"`
 		BackendAuthRpc      int `json:"backend_authrpc"`
-		BlockbookInternal   int `json:"blockbook_internal"`
-		BlockbookPublic     int `json:"blockbook_public"`
 		ExternalPort        int `json:"external_port"`
 	} `json:"ports"`
 	IPC struct {
@@ -71,28 +69,6 @@ type Config struct {
 		MessageQueueBindingTemplate string `json:"message_queue_binding_template"`
 	} `json:"ipc"`
 	Backend   Backend `json:"backend"`
-	Blockbook struct {
-		PackageName             string `json:"package_name"`
-		SystemUser              string `json:"system_user"`
-		InternalBindingTemplate string `json:"internal_binding_template"`
-		PublicBindingTemplate   string `json:"public_binding_template"`
-		ExplorerURL             string `json:"explorer_url"`
-		AdditionalParams        string `json:"additional_params"`
-		BlockChain              struct {
-			Parse                 bool   `json:"parse,omitempty"`
-			Subversion            string `json:"subversion,omitempty"`
-			AddressFormat         string `json:"address_format,omitempty"`
-			MempoolWorkers        int    `json:"mempool_workers"`
-			MempoolSubWorkers     int    `json:"mempool_sub_workers"`
-			BlockAddressesToKeep  int    `json:"block_addresses_to_keep"`
-			XPubMagic             uint32 `json:"xpub_magic,omitempty"`
-			XPubMagicSegwitP2sh   uint32 `json:"xpub_magic_segwit_p2sh,omitempty"`
-			XPubMagicSegwitNative uint32 `json:"xpub_magic_segwit_native,omitempty"`
-			Slip44                uint32 `json:"slip44,omitempty"`
-
-			AdditionalParams map[string]json.RawMessage `json:"additional_params"`
-		} `json:"block_chain"`
-	} `json:"blockbook"`
 	Meta struct {
 		BuildDatetime          string `json:"-"` // generated field
 		PackageMaintainer      string `json:"package_maintainer"`
@@ -102,8 +78,6 @@ type Config struct {
 		Version              string `json:"version"`
 		BackendInstallPath   string `json:"backend_install_path"`
 		BackendDataPath      string `json:"backend_data_path"`
-		BlockbookInstallPath string `json:"blockbook_install_path"`
-		BlockbookDataPath    string `json:"blockbook_data_path"`
 		Architecture         string `json:"architecture"`
 	} `json:"-"`
 }
