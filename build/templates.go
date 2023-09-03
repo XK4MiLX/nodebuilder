@@ -39,7 +39,7 @@ type Backend struct {
 	ProtectMemory                   bool               `json:"protect_memory"`
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
-	NodeType                        string             `json:"node_type"`
+	NodeKey                         string             `json:"node_key"`
 	ServerConfigFile                string             `json:"server_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
@@ -110,8 +110,8 @@ func (c *Config) ParseTemplate() *template.Template {
 		"Backend.LogrotateFilesTemplate":          c.Backend.LogrotateFilesTemplate,
 		"Backend.PostinstScriptTemplate":          c.Backend.PostinstScriptTemplate,
 		"Backend.ServiceAdditionalParamsTemplate": c.Backend.ServiceAdditionalParamsTemplate,
-		"Blockbook.InternalBindingTemplate":       c.Blockbook.InternalBindingTemplate,
-		"Blockbook.PublicBindingTemplate":         c.Blockbook.PublicBindingTemplate,
+	//	"Blockbook.InternalBindingTemplate":       c.Blockbook.InternalBindingTemplate,
+	//	"Blockbook.PublicBindingTemplate":         c.Blockbook.PublicBindingTemplate,
 	}
 
 	funcMap := template.FuncMap{
