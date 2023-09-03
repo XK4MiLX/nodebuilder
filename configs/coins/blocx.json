@@ -7,7 +7,7 @@
   },
   "ports": {
     "backend_rpc": 12972,
-    "backend_message_queue": 38358, 
+    "backend_message_queue": 38358
   },
   "ipc": {
     "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
