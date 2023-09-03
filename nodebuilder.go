@@ -24,7 +24,7 @@ func main() {
 			}
 			return nil
 		})
-		fmt.Fprintf(os.Stderr, "Usage: %s coin <url>\nCoin build in are:\n%v\n", filepath.Base(os.Args[0]), coins)
+		fmt.Fprintf(os.Stderr, "Usage: %s coin <url>\nCoin build-in are:\n%v\n", filepath.Base(os.Args[0]), coins)
 		os.Exit(0)
 	}
 
