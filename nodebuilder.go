@@ -5,8 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-        "log"
-        "io/ioutil"
 	"./build"
 )
 
