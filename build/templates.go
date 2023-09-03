@@ -39,11 +39,16 @@ type Backend struct {
 	ProtectMemory                   bool               `json:"protect_memory"`
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
-	NodeKey                         string             `json:"node_key"`
+	Masternode  			Masternode 	   `json:"masternode"`
 	NodeType                        string             `json:"node_type"`
 	ServerConfigFile                string             `json:"server_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
+}
+
+type Masternode struct {
+	KeyValue    	string `json:"-"`
+	Key     	string `json:"key"`
 }
 
 // Config contains the structure of the config
@@ -243,7 +248,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 	config.Env.Architecture = runtime.GOARCH
 	config.Backend.PublicIP = getPublicIP()
 	if os.Getenv("KEY") != "" {
-	  config.Backend.NodeKey = os.Getenv("KEY")
+	  config.Backend.Masternode.Key = os.Getenv("KEY")
         }
 
 	if !isEmpty(config, "backend") {
