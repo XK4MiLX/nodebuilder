@@ -13,7 +13,7 @@ import (
 const (
 	configsDir  = "configs"
 	templateDir = "build/templates"
-	outputDir   = "."
+	outputDir   = "node"
 )
 
 func main() {
