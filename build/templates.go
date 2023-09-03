@@ -48,7 +48,7 @@ type Backend struct {
 
 type Masternode struct {
 	KeyValue    	string `json:"-"`
-	Key     	string `json:"key"`
+	KeyWord     	string `json:"key_word"`
 }
 
 // Config contains the structure of the config
