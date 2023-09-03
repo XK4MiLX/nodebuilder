@@ -13,7 +13,7 @@ import (
 const (
 	configsDir  = "configs"
 	templateDir = "build/templates"
-	outputDir   = "pkg-build"
+	outputDir   = "build"
 )
 
 func main() {
