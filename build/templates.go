@@ -276,8 +276,6 @@ func isEmpty(config *Config, target string) bool {
 	switch target {
 	case "backend":
 		return config.Backend.PackageName == ""
-	case "blockbook":
-		return config.Blockbook.PackageName == ""
 	default:
 		panic("Invalid target name: " + target)
 	}
