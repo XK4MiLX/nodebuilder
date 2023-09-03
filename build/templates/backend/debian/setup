@@ -14,8 +14,8 @@ echo -e "Creating Pid Path..."
 $SUPERUSER mkdir -p /run/{{.Coin.Alias}}
 echo -e "Copy Files and Directories..."
 $SUPERUSER mv backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
-sudo mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf
-{{if .Backend.ExecScript }}sudo mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
+{{if .Backend.ServerConfigFile}}$SUPERUSER mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf{{end}}
+{{if .Backend.ExecScript }}$SUPERUSER mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
 rm -rf backend
 $SUPERUSER bash -c "debian/postinst"
 
