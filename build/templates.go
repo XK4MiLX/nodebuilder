@@ -65,7 +65,6 @@ type Config struct {
 		BackendP2P          int `json:"backend_p2p"`
 		BackendHttp         int `json:"backend_http"`
 		BackendAuthRpc      int `json:"backend_authrpc"`
-		ExternalPort        int `json:"external_port"`
 	} `json:"ports"`
 	IPC struct {
 		RPCURLTemplate              string `json:"rpc_url_template"`
