@@ -51,8 +51,8 @@ func main() {
                 panic(err)
         }
 
-        if config.Backend.ServerConfigFile != "" {
-                err = os.Remove(filepath.Join(outputDir, "backend/" + coin + ".conf"))
+        if config.Backend.ServerConfigFile == "" {
+                err = os.Remove(filepath.Join(outputDir, "backend/server.conf"))
         	if err != nil {
                 	panic(err)
         	}
