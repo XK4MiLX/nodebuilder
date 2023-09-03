@@ -143,7 +143,7 @@ func copyNonZeroBackendFields(toValue *Backend, fromValue *Backend) {
 	}
 }
 
-func checkIPAddress(ip string) (result bool) {
+func checkIPAddress(ip string) bool {
     if net.ParseIP(ip) == nil {
         return false
     }
@@ -171,7 +171,7 @@ func printResponse(url string) (retErr error, result string) {
     return nil, ip
 }
 
-func getPublicIP() (ip string) {
+func getPublicIP() string {
         var PublicIP string
         var urls = []string{
                 "https://api4.my-ip.io/ip",
