@@ -22,7 +22,7 @@
     "package_revision": "satoshilabs-1",
     "node_type": "masternode",
     "masternode": {
-     "key": "znodeblsprivkey"
+     "keyword": "znodeblsprivkey"
     },
     "system_user": "blocx",
     "version": "2.1.0",
