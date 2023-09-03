@@ -92,6 +92,7 @@ func jsonToString(msg json.RawMessage) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	
 	return string(d), nil
 }
 
@@ -103,6 +104,7 @@ func generateRPCAuth(user, pass string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	
 	return out.String(), nil
 }
 
@@ -115,8 +117,6 @@ func (c *Config) ParseTemplate() *template.Template {
 		"Backend.LogrotateFilesTemplate":          c.Backend.LogrotateFilesTemplate,
 		"Backend.PostinstScriptTemplate":          c.Backend.PostinstScriptTemplate,
 		"Backend.ServiceAdditionalParamsTemplate": c.Backend.ServiceAdditionalParamsTemplate,
-	//	"Blockbook.InternalBindingTemplate":       c.Blockbook.InternalBindingTemplate,
-	//	"Blockbook.PublicBindingTemplate":         c.Blockbook.PublicBindingTemplate,
 	}
 
 	funcMap := template.FuncMap{
@@ -145,11 +145,9 @@ func copyNonZeroBackendFields(toValue *Backend, fromValue *Backend) {
 
 func checkIPAddress(ip string) (result bool) {
     if net.ParseIP(ip) == nil {
-       // fmt.Printf("IP Address: %s - Invalid\n", ip)
         return false
-    } else {
-       // fmt.Printf("IP Address: %s - Valid\n", ip)
     }
+	
    return true
 }
 
@@ -169,6 +167,7 @@ func printResponse(url string) (retErr error, result string) {
         return err, ""
     }
     ip := strings.Trim(string(body[:]), "\n")
+	
     return nil, ip
 }
 
@@ -188,7 +187,8 @@ func getPublicIP() (ip string) {
                   }
                 }
         }
- return PublicIP
+	
+	 return PublicIP
 }
 
 
@@ -197,12 +197,11 @@ func isValidUrl(toTest string) bool {
 	if err != nil {
 		return false
 	}
-
 	u, err := url.Parse(toTest)
 	if err != nil || u.Scheme == "" || u.Host == "" {
 		return false
 	}
-
+	
 	return true
 }
 
@@ -297,13 +296,13 @@ func RemoveContents(dir string) error {
             return err
         }
     }
+	
     return nil
 }
 
 // GeneratePackageDefinitions generate the package definitions from the config
 func GeneratePackageDefinitions(config *Config, templateDir, outputDir , coin string) error {
 	templ := config.ParseTemplate()
-
 	err := makeOutputDir(outputDir)
 	if err != nil {
 		return err
@@ -362,16 +361,11 @@ func GeneratePackageDefinitions(config *Config, templateDir, outputDir , coin st
 		if err := writeBackendServerConfigFile(config, outputDir, coin); err != nil {
 			return err
 		}
-
-	//	if err := writeBackendClientConfigFile(config, outputDir); err != nil {
-	//		return err
-	//	}
-
 		if err := writeBackendExecScript(config, outputDir); err != nil {
 			return err
 		}
 	}
-
+	
 	return nil
 }
 
@@ -414,7 +408,7 @@ func writeBackendServerConfigFile(config *Config, outputDir, coin string) error 
 			return err
 		}
 	}
-
+	
 	return nil
 }
 
