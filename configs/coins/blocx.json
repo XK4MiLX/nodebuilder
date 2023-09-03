@@ -12,12 +12,13 @@
   "ipc": {
     "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
     "rpc_user": "rpc",
+    "rpc_pass": "rpc",
     "rpc_timeout": 25,
     "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}"
   },
   "backend": {
     "package_name": "backend-blocx",
-    "package_revision": "satoshilabs-1",
+    "package_revision": "blocx-2.1.0",
     "node_type": "masternode",
     "masternode": {
      "key_word": "znodeblsprivkey"
