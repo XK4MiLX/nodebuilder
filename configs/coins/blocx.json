@@ -20,6 +20,7 @@
   "backend": {
     "package_name": "backend-blocx",
     "package_revision": "satoshilabs-1",
+    "node_type": "masternode"
     "system_user": "blocx",
     "version": "2.1.0",
     "binary_url": "https://github.com/BLOCXTECH/BLOCX/releases/download/v2.1.0/BLOCX-2.1.0-ubuntu-daemon.tar.gz",
@@ -37,9 +38,7 @@
     "server_config_file": "bitcoin_like.conf",
     "additional_params": {
       "znode": 1,
-      "logtimestamps": 1,
-      "znodeblsprivkey": "{{.Backend.NoneKey}}",
-      "externalip": "{{.Backend.PublicIP}}:{{.Ports.ExternalPort}}"
+      "logtimestamps": 1
     }
   }
 }
