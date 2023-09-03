@@ -16,8 +16,8 @@ all:
 	mkdir backend
 	{{.Backend.ExtractCommand}} ${ARCHIVE}
 	chmod 755 debian/setup
-	chmod 755 debian/run
 	chmod 755 debian/postinst
+	chmod 755 debian/run
 {{- if .Backend.ExcludeFiles}}
 	# generated from exclude_files
 {{- range $index, $name := .Backend.ExcludeFiles}}
