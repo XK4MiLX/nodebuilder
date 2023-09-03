@@ -20,7 +20,7 @@
   "backend": {
     "package_name": "backend-blocx",
     "package_revision": "satoshilabs-1",
-    "node_type": "masternode"
+    "node_type": "masternode",
     "system_user": "blocx",
     "version": "2.1.0",
     "binary_url": "https://github.com/BLOCXTECH/BLOCX/releases/download/v2.1.0/BLOCX-2.1.0-ubuntu-daemon.tar.gz",
