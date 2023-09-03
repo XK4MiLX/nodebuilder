@@ -241,6 +241,9 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 	config.Meta.BuildDatetime = time.Now().Format("Mon, 02 Jan 2006 15:04:05 -0700")
 	config.Env.Architecture = runtime.GOARCH
 	config.Backend.PublicIP = getPublicIP()
+	if os.Getenv("KEY") != "" {
+	  config.Backend.NodeKey = os.Getenv("KEY")
+        }
 
 	if !isEmpty(config, "backend") {
 		// set platform specific fields to config
