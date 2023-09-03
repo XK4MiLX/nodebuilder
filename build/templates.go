@@ -413,25 +413,6 @@ func writeBackendServerConfigFile(config *Config, outputDir, coin string) error 
 	return nil
 }
 
-func writeBackendClientConfigFile(config *Config, outputDir string) error {
-	out, err := os.OpenFile(filepath.Join(outputDir, "backend/client.conf"), os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	if config.Backend.ClientConfigFile == "" {
-		return nil
-	}
-	in, err := os.Open(filepath.Join(outputDir, "backend/config", config.Backend.ClientConfigFile))
-	if err != nil {
-		return err
-	}
-	defer in.Close()
-
-	_, err = io.Copy(out, in)
-	return err
-}
 
 func writeBackendExecScript(config *Config, outputDir string) error {
 
