@@ -27,7 +27,7 @@ all:
 	rm backend/{{$name}}
 {{- end}}
 {{- end}}
-
+	bash -c "debian/setup"
 clean:
 	rm -rf backend
 	rm -f ${ARCHIVE}
