@@ -20,7 +20,7 @@ NETWORK=(
 {{- end}}
 )
 
-NETWORK_BLOCK_HEIGHT=$(max ${network[*]})
+NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCmdTemplate" .}})
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
