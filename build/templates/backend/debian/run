@@ -5,6 +5,10 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
+{{generateRPCAuth .IPC.RPCUser .IPC.RPCPass -}}
+
+{{if containsString {{template "Backend.ExecCommandTemplate" .}} "-c"}}yes!{{end}}
+
 bash_check=$(egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})")
 if [[ "$bash_check" != "" ]]; then
   $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}
