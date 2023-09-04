@@ -123,7 +123,6 @@ func (c *Config) ParseTemplate() *template.Template {
 		"Backend.LogrotateFilesTemplate":          c.Backend.LogrotateFilesTemplate,
 		"Backend.PostinstScriptTemplate":          c.Backend.PostinstScriptTemplate,
 		"Backend.ServiceAdditionalParamsTemplate": c.Backend.ServiceAdditionalParamsTemplate,
-		"Backend.HealthCheckTemplate": 		   c.Backend.HealthCheckTemplate,
 	}
 
 	funcMap := template.FuncMap{
