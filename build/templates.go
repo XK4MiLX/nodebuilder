@@ -131,6 +131,7 @@ func (c *Config) ParseTemplate() *template.Template {
 	funcMap := template.FuncMap{
 		"jsonToString":    jsonToString,
 		"generateRPCAuth": generateRPCAuth,
+		"Contains":  strings.Contains,
 	}
 
 	t := template.New("").Funcs(funcMap)
