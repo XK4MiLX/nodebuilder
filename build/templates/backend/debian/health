@@ -16,7 +16,7 @@ function max(){
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCmd}}
 	"{{$name}}"
 {{- end}}
-{{- end}
+{{- end}}
 
 NETWORK=(
 {{- if .Backend.Healthcheck}}
