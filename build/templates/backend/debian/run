@@ -5,8 +5,6 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
-{{generateRPCAuth .IPC.RPCUser .IPC.RPCPass -}}
-
 {{if Regex .Backend.ExecCommandTemplate `/bin/sh -c|bash -c|/bin/bash` -}}yes!{{end}}
 
 bash_check=$(egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})")
