@@ -23,9 +23,8 @@ NETWORK=(
 {{- end}}
 )
 
-
 NETWORK_BLOCK_HEIGHT=$(max ${network[*]})
-CURRENT_NODE_HEIGHT=$()
+CURRENT_NODE_HEIGHT=$({{.Backend.HealthCheck.LocalGetBlockCmd}})
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   echo "Daemon not working correct..."
