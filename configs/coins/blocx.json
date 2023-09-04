@@ -23,6 +23,13 @@
     "masternode": {
      "key_word": "znodeblsprivkey"
     },
+    "health_check": {
+      "explorer_get_block_cmd": [
+        "$(curl -SsL -m 3 https://explorer.blocx.space/api/getblockcount)",
+        "$(blocx-cli getblockchaininfo | jq '.blocks')"
+      ],
+      "local_get_block_cmd":  ".{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'"
+    }
     "system_user": "blocx",
     "version": "2.1.0",
     "binary_url": "https://github.com/BLOCXTECH/BLOCX/releases/download/v2.1.0/BLOCX-2.1.0-ubuntu-daemon.tar.gz",
