@@ -25,8 +25,8 @@
     },
     "healthcheck": {
       "explorer_get_block_cmd": [
-        "$(curl -SsL -m 3 https://explorer.blocx.space/api/getblockcount)",
-        "$(curl -SsL  -m 3 https://ex1.blocx.space/api/ | jq .backend.blocks)"
+        "$(curl -SsL -m 10 https://explorer.blocx.space/api/getblockcount)",
+        "$(curl -SsL  -m 10 https://ex1.blocx.space/api/ | jq .backend.blocks)"
       ],
       "local_get_block_cmd_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'"
     },
