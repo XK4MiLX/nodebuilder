@@ -36,7 +36,7 @@ if egrep -o "^[0-9]+$" <<< "$NETWORK_BLOCK_HEIGHT" &>/dev/null; then
   DIFF=${DIFF#-}
 else
   echo "Daemon working but check cant veryfity sync with network..."
-  {{- if .Backend.Healthcheck.LogsRedirect -}}
+  {{- if .Backend.Healthcheck.LogsRedirect }}
   echo "Daemon working but check cant veryfity sync with network..." >> /proc/1/fd/1
   {{- end}}
   exit
