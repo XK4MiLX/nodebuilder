@@ -12,6 +12,13 @@ function max(){
     echo "$m"
 }
 
+{{range .Backend.Healthcheck}}    
+  {{range .ExplorerGetBlockCmd}}
+     {{.}}
+  {{end}}
+{{end}}
+
+
 NETWORK=(
 {{- if .Backend.Healthcheck}}
 {{- range $name, $value := .Backend.Healthcheck}}
