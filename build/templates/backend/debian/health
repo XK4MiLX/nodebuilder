@@ -51,3 +51,4 @@ else
  echo "Daemon working but is not synced with network (block height: $NETWORK_BLOCK_HEIGHT/$CURRENT_NODE_HEIGHT, left: $DIFF)" >> /proc/1/fd/1
  exit 1
 fi
+{{end}}
