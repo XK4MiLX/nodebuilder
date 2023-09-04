@@ -5,9 +5,11 @@ all:
 	wget --tries 5 {{.Backend.BinaryURL}} -q --show-progress
 {{- if eq .Backend.VerificationType "gpg"}}
 	wget {{.Backend.VerificationSource}} -O checksum
+	gpg --batch --import ../../build/gpg-keys/*
 	gpg --verify checksum ${ARCHIVE}
 {{- else if eq .Backend.VerificationType "gpg-sha256"}}
 	wget {{.Backend.VerificationSource}} -O checksum
+	gpg --batch --import ../../build/gpg-keys/*
 	gpg --verify checksum
 	sha256sum -c --ignore-missing checksum
 {{- else if eq .Backend.VerificationType "sha256"}}
