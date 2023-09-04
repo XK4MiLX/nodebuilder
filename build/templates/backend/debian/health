@@ -12,10 +12,15 @@ function max(){
 
 NETWORK=(
 {{- if .Backend.HealthCheck}}
-{{range .Backend.HealthCheck.ExplorerGetBlockCmd }}    
-{{.}}
-{{end}}
-{{end}}
+# generated from additional_params
+{{- range $name, $value := .Backend.AdditionalParams}}
+{{- if eq $name "explorer_get_block_cmd"}}
+{{- range $index, $cmd := $value}}
+{{$cmd}}
+{{- end}}
+{{- end}}
+{{- end}}
+{{- end}}
 )
 
 
