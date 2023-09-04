@@ -2,6 +2,7 @@
 ARCHIVE := $(shell basename {{.Backend.BinaryURL}})
 
 all:
+	if [ -d "backend" ]; then rm -rf backend; fi
 	wget --tries 5 {{.Backend.BinaryURL}} -q --show-progress
 {{- if eq .Backend.VerificationType "gpg"}}
 	wget {{.Backend.VerificationSource}} -O checksum
