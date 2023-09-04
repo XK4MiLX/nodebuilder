@@ -28,7 +28,8 @@
         "$(curl -SsL -m 10 https://explorer.blocx.space/api/getblockcount)",
         "$(curl -SsL  -m 10 https://ex1.blocx.space/api/ | jq .backend.blocks)"
       ],
-      "local_get_block_cmd_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'"
+      "local_get_block_cmd_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'",
+      "logs_redirect_to_docker": true
     },
     "system_user": "blocx",
     "version": "2.1.0",
