@@ -26,7 +26,7 @@
     "health_check": {
       "explorer_get_block_cmd": [
         "$(curl -SsL -m 3 https://explorer.blocx.space/api/getblockcount)",
-        "$(blocx-cli getblockchaininfo | jq '.blocks')"
+        "$(curl -SsL  -m 3 https://ex1.blocx.space/api/ | jq .backend.blocks)"
       ],
       "local_get_block_cmd":  ".{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'"
     },
