@@ -13,7 +13,7 @@ function max(){
 NETWORK=(
 {{- if .Backend.HealthCheck}}
 # generated from additional_params
-{{- range $name, $value := .Backend.AdditionalParams}}
+{{- range $name, $value := .Backend.HealthCheck}}
 {{- if eq $name "explorer_get_block_cmd"}}
 {{- range $index, $cmd := $value}}
 {{$cmd}}
