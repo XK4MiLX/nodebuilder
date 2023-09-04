@@ -5,8 +5,9 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
+bash_check=$(egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})")
 
-if [[ egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})" ]]; then
+f [[ "$bash_check" != "" ]]; then
   $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
 else
   $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
