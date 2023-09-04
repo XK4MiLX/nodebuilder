@@ -47,5 +47,9 @@
       "rpcallowip": "127.0.0.1",
       "logtimestamps": 1
     }
+  },
+  "meta": {
+  "package_maintainer": "IT Admin",
+  "package_maintainer_email": "it@satoshilabs.com"
   }
 }
