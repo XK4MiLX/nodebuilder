@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+{{define "main" -}}
+#!/bin/bash
+set -e
 function max(){
     m="0"
     for n in "$@"
