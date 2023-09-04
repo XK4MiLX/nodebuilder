@@ -41,16 +41,16 @@ type Backend struct {
 	Mainnet                         bool               `json:"mainnet"`
 	Masternode  			Masternode 	   `json:"masternode"`
 	NodeType                        string             `json:"node_type"`
-	HealthCheck			HealthCheck	   `json:"health_check"`
+	HealthCheck			interface{} 	   `json:"health_check,omitempty""`
 	ServerConfigFile                string             `json:"server_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
 }
 
-type HealthCheck struct {
-	ExplorerGetBlockCmd   	[]string `json:"explorer_get_block_cmd"`
-	LocalGetBlockCmd    	string `json:"local_get_block_cmd"`
-}
+//type HealthCheck struct {
+//	ExplorerGetBlockCmd   	[]string `json:"explorer_get_block_cmd"`
+//	LocalGetBlockCmd    	string `json:"local_get_block_cmd"`
+//}
 
 type Masternode struct {
 	KeyValue    	string `json:"-"`
