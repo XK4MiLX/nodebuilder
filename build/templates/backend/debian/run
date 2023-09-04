@@ -4,5 +4,9 @@ set -e
 if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
-$SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
+if [[ egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "{{template "Backend.ExecCommandTemplate" .}}" ]]; then
+  $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
+else
+  $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
+fi
 {{end}}
