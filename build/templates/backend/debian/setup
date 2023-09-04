@@ -13,7 +13,7 @@ $SUPERUSER mkdir -p {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 echo -e "Creating Pid Path..."
 $SUPERUSER mkdir -p /run/{{.Coin.Alias}}
 echo -e "Copy Files and Directories..."
-$SUPERUSER mv backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
+$SUPERUSER mv -f backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 {{if .Backend.ServerConfigFile}}$SUPERUSER mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf{{end}}
 {{if .Backend.ExecScript }}$SUPERUSER mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
 rm -rf backend
