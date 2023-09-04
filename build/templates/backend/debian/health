@@ -13,8 +13,8 @@ function max(){
 }
 
 NETWORK=(
-{{- if .Backend.HealthCheck}}
-{{- range $name, $value := .Backend.HealthCheck}}
+{{- if .Backend.Healthcheck}}
+{{- range $name, $value := .Backend.Healthcheck}}
 {{- if eq $name "explorer_get_block_cmd"}}
 {{- range $index, $cmd := $value}}
 "{{$cmd}}"
@@ -25,7 +25,7 @@ NETWORK=(
 )
 
 NETWORK_BLOCK_HEIGHT=$(max ${network[*]})
-CURRENT_NODE_HEIGHT=$({{.Backend.HealthCheck.LocalGetBlockCmd}})
+CURRENT_NODE_HEIGHT=$({{.Backend.Healthcheck.LocalGetBlockCmd}})
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   echo "Daemon not working correct..."
