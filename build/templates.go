@@ -16,7 +16,6 @@ import (
         "net/url"
 	"net"
 	"strings"
-	"regexp"
 )
 
 // Backend contains backend specific fields
