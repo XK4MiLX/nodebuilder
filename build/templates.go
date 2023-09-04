@@ -48,7 +48,7 @@ type Backend struct {
 }
 
 type Healthcheck struct {
-	ExplorerGetBlockCmd   		interface{} `json:"explorer_get_block_cmd,omitempty""`
+	ExplorerGetBlockCmd   		interface{} `json:"explorer_get_block_cmd,omitempty"`
 	LocalGetBlockCmdTemplate    	string `json:"local_get_block_cmd_template"`
 }
 
