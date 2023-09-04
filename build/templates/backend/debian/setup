@@ -6,16 +6,15 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
-echo -e "Creating Backend Data Path..."
+echo -e "Creating directory..."
 $SUPERUSER mkdir -p {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend
-echo -e "Creating Backend Install Path..."
 $SUPERUSER mkdir -p {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
-echo -e "Creating Pid Path..."
 $SUPERUSER mkdir -p /run/{{.Coin.Alias}}
-echo -e "Copy Files and Directories..."
+echo -e "Copying files..."
 $SUPERUSER cp -rf backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 {{if .Backend.ServerConfigFile}}$SUPERUSER mv server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf{{end}}
 {{if .Backend.ExecScript }}$SUPERUSER mv exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
+echo -e "Cleaning..."
 rm -rf backend
 $SUPERUSER bash -c "debian/postinst"
 
