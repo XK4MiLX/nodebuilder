@@ -264,12 +264,12 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 			copyNonZeroBackendFields(&config.Backend, &platform)
 		}
 
-		switch config.Backend.ServiceType {
-		case "forking":
-		case "simple":
-		default:
-			return nil, fmt.Errorf("Invalid service type: %s", config.Backend.ServiceType)
-		}
+		//switch config.Backend.ServiceType {
+		//case "forking":
+		//case "simple":
+		//default:
+		//	return nil, fmt.Errorf("Invalid service type: %s", config.Backend.ServiceType)
+		//}
 
 		switch config.Backend.VerificationType {
 		case "":
