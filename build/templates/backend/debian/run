@@ -6,9 +6,8 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 bash_check=$(egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})")
-
-f [[ "$bash_check" != "" ]]; then
-  $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
+if [[ "$bash_check" != "" ]]; then
+  $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}
 else
   $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
 fi
