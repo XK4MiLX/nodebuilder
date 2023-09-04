@@ -22,7 +22,6 @@ NETWORK=(
 {{- end}}
 {{- end}}
 {{- end}}
-{{- end}}
 )
 
 NETWORK_BLOCK_HEIGHT=$(max ${network[*]})
