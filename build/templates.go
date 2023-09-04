@@ -50,6 +50,7 @@ type Backend struct {
 type Healthcheck struct {
 	ExplorerGetBlockCmd   		[]string `json:"explorer_get_block_cmd"`
 	LocalGetBlockCmdTemplate    	string `json:"local_get_block_cmd_template"`
+	LogsRedirect			bool `json:"logs_redirect"`
 }
 
 type Masternode struct {
