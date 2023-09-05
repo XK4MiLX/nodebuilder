@@ -33,7 +33,8 @@
     },
     "corruption": {
       "detection": true,
-      "corruption_keyword": [
+      "log_file_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log",
+      "corruption_keywords": [
         "Corrupted",
         "Corruption",
         "ERROR: VerifyDB",
