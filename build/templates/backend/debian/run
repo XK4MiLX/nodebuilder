@@ -5,6 +5,9 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
+{{ arrayToString .Backend.Healthcheck.ExplorerGetBlockCmd }}
+
+
 bash_check=$(egrep -o '/bin/sh -c|bash -c|/bin/bash -c' <<< "({{template "Backend.ExecCommandTemplate" .}})")
 if [[ "$bash_check" != "" ]]; then
   $SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}
