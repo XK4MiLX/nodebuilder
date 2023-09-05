@@ -1,0 +1,23 @@
+{{define "main" -}}
+#!/bin/bash
+set -e
+echo -e "----------------------------------------------------------------"
+echo -e "| Checking backend logs...."
+if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
+  corruption=$(egrep -ao "{{ arrayToString .Backend.Corruption.CorruptionKeyword }}" {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log)
+  if [[ "$corruption" != "" ]]; then
+    echo -e "| Backend Corruption detected!..."
+    echo -e "| Stopping backend service..."
+    supervisorctl stop daemon > /dev/null 2>&1
+    echo -e "| Removing backend directory contents..."
+    rm -rf {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*
+    echo -e "| Starting backend service..."
+    supervisorctl start daemon > /dev/null 2>&1
+  else
+    echo -e "| Corruption NOT detected, all looks fine ;)"
+  fi
+else
+  echo -e "| File does not exists, operation aborted...."
+fi
+echo -e "----------------------------------------------------------------[END]"
+{{end}}
