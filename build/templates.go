@@ -47,6 +47,12 @@ type Backend struct {
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
 }
 
+type Corruption struct {
+	Detection   			bool		    `json:"explorer_get_block_cmd"`
+	LogFilePathTemplate  	  	string 		    `json:"log_file_path_template"`
+	CorruptionKeywords		[]string  	    `json:"corruption_keywords"`
+}
+
 type Healthcheck struct {
 	ExplorerGetBlockCmd   		[]string `json:"explorer_get_block_cmd"`
 	LocalGetBlockCmdTemplate    	string `json:"local_get_block_cmd_template"`
@@ -122,13 +128,14 @@ func arrayToString(arr []string) string {
 // ParseTemplate parses the template
 func (c *Config) ParseTemplate() *template.Template {
 	templates := map[string]string{
-		"IPC.RPCURLTemplate":                      c.IPC.RPCURLTemplate,
-		"IPC.MessageQueueBindingTemplate":         c.IPC.MessageQueueBindingTemplate,
-		"Backend.ExecCommandTemplate":             c.Backend.ExecCommandTemplate,
-		"Backend.LogrotateFilesTemplate":          c.Backend.LogrotateFilesTemplate,
-		"Backend.PostinstScriptTemplate":          c.Backend.PostinstScriptTemplate,
-		"Backend.ServiceAdditionalParamsTemplate": c.Backend.ServiceAdditionalParamsTemplate,
+		"IPC.RPCURLTemplate":                      	c.IPC.RPCURLTemplate,
+		"IPC.MessageQueueBindingTemplate":         	c.IPC.MessageQueueBindingTemplate,
+		"Backend.ExecCommandTemplate":			c.Backend.ExecCommandTemplate,
+		"Backend.LogrotateFilesTemplate":          	c.Backend.LogrotateFilesTemplate,
+		"Backend.PostinstScriptTemplate":          	c.Backend.PostinstScriptTemplate,
+		"Backend.ServiceAdditionalParamsTemplate": 	c.Backend.ServiceAdditionalParamsTemplate,
 		"Backend.Healthcheck.LocalGetBlockCmdTemplate": c.Backend.Healthcheck.LocalGetBlockCmdTemplate,
+		"Backend.Corruption.LogFilePathTemplate": 	c.Backend.Corruption.LogFilePathTemplate,
 		
 	}
 
