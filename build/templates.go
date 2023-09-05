@@ -115,8 +115,8 @@ func generateRPCAuth(user, pass string) (string, error) {
 	return out.String(), nil
 }
 
-func JoinStrings(args ...string) string {
-	return strings.Join(...args,"|")
+func arrayToString(arr []string) string {
+   return strings.Join([]string(arr), "|")
 }
 
 // ParseTemplate parses the template
@@ -136,7 +136,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"jsonToString":    jsonToString,
 		"generateRPCAuth": generateRPCAuth,
 		"containsString":  strings.Contains,
-		"JoinStrings":  JoinStrings,
+		"arrayToString":  arrayToString,
 	}
 
 	t := template.New("").Funcs(funcMap)
