@@ -31,6 +31,17 @@
       "local_get_block_cmd_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'",
       "logs_redirect": true
     },
+    "corruption": {
+      "detection": true,
+      "corruption_keyword": [
+        "Corrupted",
+        "Corruption",
+        "ERROR: VerifyDB",
+        "printcrashinfo",
+        "ERROR: invalid header received",
+        "InvalidChainFound: invalid"
+      ]
+    },
     "system_user": "blocx",
     "version": "2.1.0",
     "binary_url": "https://github.com/BLOCXTECH/BLOCX/releases/download/v2.1.0/BLOCX-2.1.0-ubuntu-daemon.tar.gz",
