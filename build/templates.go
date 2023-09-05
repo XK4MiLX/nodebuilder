@@ -135,15 +135,14 @@ func (c *Config) ParseTemplate() *template.Template {
 		"Backend.PostinstScriptTemplate":          	c.Backend.PostinstScriptTemplate,
 		"Backend.ServiceAdditionalParamsTemplate": 	c.Backend.ServiceAdditionalParamsTemplate,
 		"Backend.Healthcheck.LocalGetBlockCmdTemplate": c.Backend.Healthcheck.LocalGetBlockCmdTemplate,
-		"Backend.Corruption.LogFilePathTemplate": 	c.Backend.Corruption.LogFilePathTemplate,
-		
+		"Backend.Corruption.LogFilePathTemplate": 	c.Backend.Corruption.LogFilePathTemplate,	
 	}
 
 	funcMap := template.FuncMap{
 		"jsonToString":    jsonToString,
 		"generateRPCAuth": generateRPCAuth,
 		"containsString":  strings.Contains,
-		"arrayToString":  arrayToString,
+		"arrayToString":   arrayToString,
 	}
 
 	t := template.New("").Funcs(funcMap)
