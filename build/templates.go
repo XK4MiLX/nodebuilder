@@ -115,6 +115,10 @@ func generateRPCAuth(user, pass string) (string, error) {
 	return out.String(), nil
 }
 
+func JoinStrings(args ...string) string {
+	return strings.Join(...args,"|")
+}
+
 // ParseTemplate parses the template
 func (c *Config) ParseTemplate() *template.Template {
 	templates := map[string]string{
@@ -132,6 +136,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"jsonToString":    jsonToString,
 		"generateRPCAuth": generateRPCAuth,
 		"containsString":  strings.Contains,
+		"JoinStrings":  JoinStrings,
 	}
 
 	t := template.New("").Funcs(funcMap)
@@ -152,6 +157,8 @@ func copyNonZeroBackendFields(toValue *Backend, fromValue *Backend) {
 		}
 	}
 }
+
+
 
 func checkIPAddress(ip string) bool {
     if net.ParseIP(ip) == nil {
