@@ -18,7 +18,7 @@ all:
 {{- end}}
 	mkdir backend
 	{{.Backend.ExtractCommand}} ${ARCHIVE}
-        chmod 755 debian/health
+	chmod 755 debian/health
 	chmod 755 debian/setup
 	chmod 755 debian/postinst
 	chmod 755 debian/run
