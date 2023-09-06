@@ -1,0 +1,68 @@
+{
+  "coin": {
+    "name": "Blocx",
+    "shortcut": "BLOCX",
+    "label": "Blocx",
+    "alias": "blocx"
+  },
+  "ports": {
+    "backend_rpc": 12972,
+    "backend_message_queue": 38358
+  },
+  "ipc": {
+    "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
+    "rpc_user": "rpc",
+    "rpc_pass": "rpc",
+    "rpc_timeout": 25,
+    "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}"
+  },
+  "backend": {
+    "package_name": "backend-blocx",
+    "package_revision": "blocx-2.1.0",
+    "node_type": "masternode",
+    "masternode": {
+     "key_word": "znodeblsprivkey"
+    },
+    "healthcheck": {
+      "explorer_get_block_count": [
+        "curl -SsL -m 10 https://explorer.blocx.space/api/getblockcount",
+        "curl -SsL  -m 10 https://ex1.blocx.space/api/ | jq .backend.blocks"
+      ],
+      "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'",
+      "logs_redirect": true
+    },
+    "corruption": {
+      "detection": true,
+      "log_file_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log",
+      "corruption_keywords": [
+        "Corrupted",
+        "Corruption",
+        "ERROR: VerifyDB",
+        "printcrashinfo",
+        "ERROR: invalid header received",
+        "InvalidChainFound: invalid"
+      ]
+    },
+    "system_user": "blocx",
+    "version": "2.1.0",
+    "binary_url": "https://github.com/BLOCXTECH/BLOCX/releases/download/v2.1.0/BLOCX-2.1.0-ubuntu-daemon.tar.gz",
+    "verification_type": "sha256",
+    "verification_source": "3cc849de06d6fb9b8a5c04902aeb0001c0b0897af4d775b33724c1bad49c5f21",
+    "extract_command": "tar -C backend -xf",
+    "exclude_files": [],
+    "exec_command_template": "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/blocxd -datadir={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf -pid=/run/{{.Coin.Alias}}/{{.Coin.Alias}}.pid",
+    "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
+    "postinst_script_template": "",
+    "mainnet": true,
+    "server_config_file": "bitcoin_like.conf",
+    "additional_params": {
+      "znode": 1,
+      "rpcallowip": "127.0.0.1",
+      "logtimestamps": 1
+    }
+  },
+  "meta": {
+  "package_maintainer": "Kamil Piekarski",
+  "package_maintainer_email": "kamil@runonflux.io"
+  }
+}
