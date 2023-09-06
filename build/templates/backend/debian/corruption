@@ -1,7 +1,7 @@
 {{define "main" -}}
 #!/bin/bash
 set -e
-
+{{- if eq .Backend.NodeType "masternode" }} 
 echo -e "----------------------------------------------------------------"
 echo -e "| Checking backend logs...."
 if [[ -f {{template "Backend.Corruption.LogFilePathTemplate" .}} ]]; then
@@ -21,5 +21,5 @@ else
   echo -e "| File does not exists, operation aborted...."
 fi
 echo -e "----------------------------------------------------------------[END]"
-
+{{ end }}
 {{ end }}
