@@ -1,6 +1,7 @@
 {{define "main" -}}
 #!/bin/bash
 set -e
+{{.Backend.Corruption.Detection}}
 {{if eq .Backend.Corruption.Detection "true" -}}
 echo -e "----------------------------------------------------------------"
 echo -e "| Checking backend logs...."
@@ -25,6 +26,6 @@ echo -e "----------------------------------------------------------------[END]"
 echo -e "----------------------------------------------------------------"
 echo -e "| Corruption check [DISABLED]...."
 echo -e "----------------------------------------------------------------"
-{{end}}
+{{end -}}
 
 {{end}}
