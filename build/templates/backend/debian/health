@@ -21,7 +21,7 @@ NETWORK=(
 {{- end}}
 )
 NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
-{{- end}}
+
 
 {{- if .Backend.Healthcheck.LocalGetBlockCountTemplate}}
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
