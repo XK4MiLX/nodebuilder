@@ -4,7 +4,7 @@ set -e
 echo -e "----------------------------------------------------------------"
 echo -e "| Checking backend logs...."
 if [[ -f {{template "Backend.Corruption.LogFilePathTemplate" .}} ]]; then
-  corruption=$(egrep -ao "{{ arrayToString .Backend.Corruption.CorruptionKeyword }}" {{template "Backend.Corruption.LogFilePathTemplate" .}})
+  corruption=$(egrep -ao "{{ arrayToString .Backend.Corruption.CorruptionKeywords }}" {{template "Backend.Corruption.LogFilePathTemplate" .}})
   if [[ "$corruption" != "" ]]; then
     echo -e "| Backend Corruption detected!..."
     echo -e "| Stopping backend service..."
