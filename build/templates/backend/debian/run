@@ -6,7 +6,7 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 {{ if containsString .Backend.ExecCommandTemplate " -c " -}}
-$SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}
+$SUPERUSER HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}
 {{else}}
 $SUPERUSER bash -c "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{template "Backend.ExecCommandTemplate" .}}"
 {{end}}
