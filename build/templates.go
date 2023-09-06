@@ -35,12 +35,11 @@ type Backend struct {
 	LogrotateFilesTemplate          string             `json:"logrotate_files_template"`
 	PostinstScriptTemplate          string             `json:"postinst_script_template"`
 	ServiceType                     string             `json:"service_type"`
-	ServiceAdditionalParamsTemplate string             `json:"service_additional_params_template"`
-	ProtectMemory                   bool               `json:"protect_memory"`
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
-	Masternode  			Masternode 	   `json:"masternode"`
 	NodeType                        string             `json:"node_type"`
+	Masternode  			Masternode 	   `json:"masternode"`
+	Corruption			Corruption	   `json:"corruption"`
 	Healthcheck			Healthcheck 	   `json:"healthcheck"`
 	ServerConfigFile                string             `json:"server_config_file"`
 	AdditionalParams                interface{}        `json:"additional_params,omitempty"`
@@ -48,14 +47,14 @@ type Backend struct {
 }
 
 type Corruption struct {
-	Detection   			bool		    `json:"explorer_get_block_cmd"`
+	Detection   			bool		    `json:"detection"`
 	LogFilePathTemplate  	  	string 		    `json:"log_file_path_template"`
 	CorruptionKeywords		[]string  	    `json:"corruption_keywords"`
 }
 
 type Healthcheck struct {
-	ExplorerGetBlockCmd   		[]string `json:"explorer_get_block_cmd"`
-	LocalGetBlockCmdTemplate    	string `json:"local_get_block_cmd_template"`
+	ExplorerGetBlockCount   	[]string `json:"explorer_get_block_count"`
+	LocalGetBlockCountTemplate    	string `json:"local_get_block_count_template"`
 	LogsRedirect			bool `json:"logs_redirect"`
 }
 
@@ -128,14 +127,14 @@ func arrayToString(arr []string) string {
 // ParseTemplate parses the template
 func (c *Config) ParseTemplate() *template.Template {
 	templates := map[string]string{
-		"IPC.RPCURLTemplate":                      	c.IPC.RPCURLTemplate,
-		"IPC.MessageQueueBindingTemplate":         	c.IPC.MessageQueueBindingTemplate,
-		"Backend.ExecCommandTemplate":			c.Backend.ExecCommandTemplate,
-		"Backend.LogrotateFilesTemplate":          	c.Backend.LogrotateFilesTemplate,
-		"Backend.PostinstScriptTemplate":          	c.Backend.PostinstScriptTemplate,
-		"Backend.ServiceAdditionalParamsTemplate": 	c.Backend.ServiceAdditionalParamsTemplate,
-		"Backend.Healthcheck.LocalGetBlockCmdTemplate": c.Backend.Healthcheck.LocalGetBlockCmdTemplate,
-		"Backend.Corruption.LogFilePathTemplate": 	c.Backend.Corruption.LogFilePathTemplate,	
+		"IPC.RPCURLTemplate":                      		c.IPC.RPCURLTemplate,
+		"IPC.MessageQueueBindingTemplate":         		c.IPC.MessageQueueBindingTemplate,
+		"Backend.ExecCommandTemplate":				c.Backend.ExecCommandTemplate,
+		"Backend.LogrotateFilesTemplate":          		c.Backend.LogrotateFilesTemplate,
+		"Backend.PostinstScriptTemplate":          		c.Backend.PostinstScriptTemplate,
+		"Backend.ServiceAdditionalParamsTemplate": 		c.Backend.ServiceAdditionalParamsTemplate,
+		"Backend.Healthcheck.LocalGetBlockCountTemplate": 	c.Backend.Healthcheck.LocalGetBlockCountTemplate,
+		"Backend.Corruption.LogFilePathTemplate": 		c.Backend.Corruption.LogFilePathTemplate,	
 	}
 
 	funcMap := template.FuncMap{
@@ -199,7 +198,7 @@ func getPublicIP() string {
         var urls = []string{
                 "https://api4.my-ip.io/ip",
                 "https://checkip.amazonaws.com",
-                "https://api.ipify.or",
+                "https://api.ipify.org",
         }
         for _, url := range urls {
                 err, result := printResponse(url)
