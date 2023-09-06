@@ -32,7 +32,7 @@
       "logs_redirect": true
     },
     "corruption": {
-      "detection": true,
+      "detection": false,
       "log_file_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log",
       "corruption_keywords": [
         "Corrupted",
