@@ -365,6 +365,9 @@ func GeneratePackageDefinitions(config *Config, templateDir, outputDir , coin st
 
 			t := template.Must(templ.Clone())
 			t = template.Must(t.ParseFiles(path))
+			if err != nil {
+				return fmt.Errorf("%s: %s", path, err)
+			}
 
 			err = writeTemplate(filepath.Join(outputDir, subpath), info, t, config)
 			if err != nil {
