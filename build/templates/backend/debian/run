@@ -5,7 +5,7 @@ if [[ "$(whoami)" != root ]]; then
  SUPERUSER=sudo
 fi
 
-{{ if containsString Backend.ExecCommandTemplate " -c " -}}
+{{ if containsString .Backend.ExecCommandTemplate " -c " -}}
 xxx
 {{else}}
 yyy
