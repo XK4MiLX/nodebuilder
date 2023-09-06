@@ -13,8 +13,6 @@ function max(){
 }
 
 BACKEND_SIZE=$(du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk '{printf("%0.2f GB\n", $1/1000/1000/1000)}')
-
-
 NETWORK=(
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount}}
 "$({{$name}})"
@@ -22,8 +20,7 @@ NETWORK=(
 )
 NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
 
-
-{{- if .Backend.Healthcheck.LocalGetBlockCountTemplate}}
+{{- if .Backend.Healthcheck.LocalGetBlockCountTemplate }}
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
