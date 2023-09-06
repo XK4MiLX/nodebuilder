@@ -18,7 +18,7 @@
   },
   "backend": {
     "package_name": "backend-blocx",
-    "package_revision": "blocx-2.1.0",
+    "package_revision": "satoshilabs-1",
     "node_type": "masternode",
     "masternode": {
      "key_word": "znodeblsprivkey"
