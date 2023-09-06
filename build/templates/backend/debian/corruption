@@ -1,6 +1,8 @@
 {{define "main" -}}
 #!/bin/bash
 set -e
+
+{{if eq .Backend.Corruption.Detection "true" -}}
 echo -e "----------------------------------------------------------------"
 echo -e "| Checking backend logs...."
 if [[ -f {{template "Backend.Corruption.LogFilePathTemplate" .}} ]]; then
@@ -20,4 +22,9 @@ else
   echo -e "| File does not exists, operation aborted...."
 fi
 echo -e "----------------------------------------------------------------[END]"
+{{- else}}
+echo -e "----------------------------------------------------------------"
+echo -e "| Corruption check [DISABLED]...."
+echo -e "----------------------------------------------------------------"
+{{- end}}
 {{end}}
