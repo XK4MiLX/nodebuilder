@@ -132,7 +132,6 @@ func (c *Config) ParseTemplate() *template.Template {
 		"Backend.ExecCommandTemplate":				c.Backend.ExecCommandTemplate,
 		"Backend.LogrotateFilesTemplate":          		c.Backend.LogrotateFilesTemplate,
 		"Backend.PostinstScriptTemplate":          		c.Backend.PostinstScriptTemplate,
-		"Backend.ServiceAdditionalParamsTemplate": 		c.Backend.ServiceAdditionalParamsTemplate,
 		"Backend.Healthcheck.LocalGetBlockCountTemplate": 	c.Backend.Healthcheck.LocalGetBlockCountTemplate,
 		"Backend.Corruption.LogFilePathTemplate": 		c.Backend.Corruption.LogFilePathTemplate,	
 	}
