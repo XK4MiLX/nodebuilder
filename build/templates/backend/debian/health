@@ -19,8 +19,6 @@ NETWORK=(
 {{- end}}
 )
 NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
-
-{{- if .Backend.Healthcheck.LocalGetBlockCountTemplate }}
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
@@ -61,5 +59,5 @@ else
  {{- end}}
  exit 1
 fi
-{{- end}}
+
 {{end}}
