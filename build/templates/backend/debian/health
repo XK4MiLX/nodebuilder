@@ -14,7 +14,7 @@ function max(){
 
 BACKEND_SIZE=$(du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk '{printf("%0.2f GB\n", $1/1000/1000/1000)}')
 
-{{- if .Backend.Healthcheck.ExplorerGetBlockCount}}
+
 NETWORK=(
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount}}
 "$({{$name}})"
@@ -64,6 +64,5 @@ else
  {{- end}}
  exit 1
 fi
-{{- end}}
 {{- end}}
 {{end}}
