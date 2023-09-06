@@ -13,17 +13,18 @@ function max(){
 }
 
 
+{{- if .Backend.Healthcheck.LocalGetBlockCountTemplate }}
 BACKEND_SIZE=$(du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk '{printf("%0.2f GB\n", $1/1000/1000/1000)}')
-{{- if .Backend.Healthcheck.ExplorerGetBlockCount}}
+{{- if .Backend.Healthcheck.ExplorerGetBlockCount }}
 NETWORK=(
-{{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount}}
+{{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount }}
 "$({{$name}})"
 {{- end}}
 )
 NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
 {{- end}}
-CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
 
+CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   msg="Status = [FAILED]"
   echo "$msg"
@@ -35,7 +36,7 @@ else
   msg="Status = [OK], Size = $BACKEND_SIZE"
 fi
 
-{{- if .Backend.Healthcheck.ExplorerGetBlockCount}}
+{{- if .Backend.Healthcheck.ExplorerGetBlockCount }}
 if egrep -o "^[0-9]+$" <<< "$NETWORK_BLOCK_HEIGHT" &>/dev/null; then
   DIFF=$((NETWORK_BLOCK_HEIGHT-CURRENT_NODE_HEIGHT))
   DIFF=${DIFF#-}
@@ -47,7 +48,6 @@ else
   {{- end}}
   exit
 fi
-
 if [[ "$DIFF" -le 10 ]]; then
  msg+=", isSynced = [YES] (Height: $CURRENT_NODE_HEIGHT)"
  echo "$msg"
@@ -62,5 +62,12 @@ else
  {{- end}}
  exit 1
 fi
+{{- end}}
+{{- else}}
+msg="Status = [HEALCHECK DISABLED]"
+echo "$msg"
+{{- if .Backend.Healthcheck.LogsRedirect }}
+echo "$msg" >> /proc/1/fd/1
+{{- end}}
 {{- end}}
 {{end}}
