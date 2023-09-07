@@ -6,7 +6,7 @@
     "alias": "blocx"
   },
   "ports": {
-    "backend_rpc": 12972,
+    "backend_rpc": 12975,
     "backend_message_queue": 38358
   },
   "ipc": {
