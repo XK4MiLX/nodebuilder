@@ -12,8 +12,12 @@ function max(){
     echo "$m"
 }
 
+if [[ "$(whoami)" != root ]]; then
+ SUPERUSER=sudo
+fi
+
 {{- if .Backend.Healthcheck.LocalGetBlockCountTemplate }}
-BACKEND_SIZE=$(du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk '{printf("%0.2f GB\n", $1/1000/1000/1000)}')
+BACKEND_SIZE=$($SUPERUSER du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk '{printf("%0.2f GB\n", $1/1000/1000/1000)}')
 {{- if .Backend.Healthcheck.ExplorerGetBlockCount }}
 NETWORK=(
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount }}
