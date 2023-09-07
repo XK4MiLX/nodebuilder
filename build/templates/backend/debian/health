@@ -62,7 +62,8 @@ if [[ "$DIFF" -le 10 ]]; then
   echo "$msg" >> /proc/1/fd/1
   {{- end}}
 else
-  msg+=", isSynced = [NO] (Height: $NETWORK_BLOCK_HEIGHT/$CURRENT_NODE_HEIGHT, left: $DIFF)"
+  progress=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $CURRENT_NODE_HEIGHT $NETWORK_BLOCK_HEIGHT)
+  msg+=", isSynced = [NO] (Height: $NETWORK_BLOCK_HEIGHT/$CURRENT_NODE_HEIGHT, left: $DIFF, progress: $progress%)"
   echo "$msg"
   {{- if .Backend.Healthcheck.LogsRedirect }}
   echo "$msg" >> /proc/1/fd/1
