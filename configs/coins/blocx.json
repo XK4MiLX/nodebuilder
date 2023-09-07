@@ -58,7 +58,8 @@
     "additional_params": {
       "znode": 1,
       "rpcallowip": "127.0.0.1",
-      "logtimestamps": 1
+      "logtimestamps": 1,
+      "listen": 0
     }
   },
   "meta": {
