@@ -1,5 +1,4 @@
 {{define "main" -}}
-backend ({{.Backend.Version}}{{if .Backend.PackageRevision}}-{{.Backend.PackageRevision}}{{end}})
 
   * {{.Coin.Name}} backend daemon version {{.Backend.Version}}
 
