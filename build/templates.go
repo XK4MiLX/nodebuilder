@@ -162,8 +162,6 @@ func copyNonZeroBackendFields(toValue *Backend, fromValue *Backend) {
 	}
 }
 
-
-
 func checkIPAddress(ip string) bool {
     if net.ParseIP(ip) == nil {
         return false
@@ -225,7 +223,6 @@ func isValidUrl(toTest string) bool {
 	
 	return true
 }
-
 
 // LoadConfig loads the config files
 func LoadConfig(configsDir, coin string, url string) (*Config, error) {
