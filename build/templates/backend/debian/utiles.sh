@@ -1,0 +1,243 @@
+{{define "main" -}}
+#!/usr/bin/env bash
+CONFIG_DIR={{.Env.BackendDataPath}}/{{.Coin.Alias}}
+COIN={{.Coin.Alias}}
+BOOTSTRAP_PATH={{.Env.BackendDataPath}}/{{.Coin.Alias}}/bootstrap
+
+function tar_file_pack() {
+	echo -e "| Creating archive file..."
+	tar -czf - $1 | (pv -p --timer --rate --bytes > $2) 2>&1
+}
+
+function tar_file_unpack()
+{
+    echo -e "| Unpacking archive file..."
+    pv $1 | tar -zx -C $2
+}
+
+function auto_restore(){
+  if [[ "$1" == "backend" ]]; then
+    URL=$(curl -sSL -m 10 https://fluxnodeservice.com/blockbook/index.json | jq -r '.backend_backup[].url' | grep "$COIN-")
+  fi
+  if [[ "$URL" == "" ]]; then
+    echo -e "| Backup archive not found, operation aborted..."
+    echo -e "--------------------------------------------------"
+    exit
+  fi
+}
+
+if [[ "$1" == "" ]]; then
+  echo -e "---------------------------------------------------------------------------------------------"
+  echo -e "| Backend Utils v1.0"
+  echo -e "---------------------------------------------------------------------------------------------"
+  echo -e "| Usage:"
+  echo -e "| backend_backup                                - create backend backup archive"
+  echo -e "| backend_restore (-remote <url>)               - restore backend from backup archive"
+  echo -e "| backend_clean                                 - remove backend directory content"
+  echo -e "| backup_share                                  - share backup archive directory via http"
+  echo -e "| backup_archive                                - create backup archive directory"
+  echo -e "| bootstrap_clean                               - remove bootstrap archive"
+  echo -e "| log_clean                                     - remove logs"
+  echo -e "| logs <number>                                 - show all logs"
+  echo -e "-------------------------------------------------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "logs" ]]; then
+  if [[ "$2" == "" ]]; then
+    LINE=50
+  else
+    LINE=$2
+  fi
+
+  echo -e "-----------------------------------------------------------------------------------------------"
+  echo -e "| BLOCKBOOK LOGS CHECKER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "-----------------------------------------------------------------------------------------------"
+  echo -e "| CHECKING BUILD LOGS..."
+  echo -e "----------------------------------------------------------------------------------[START BUILD]"
+  supervisorctl tail build | tail -n${LINE}
+  echo -e "------------------------------------------------------------------------------------[END BUILD]"
+  echo -e "| CHECKING DAEMON LOGS..."
+  echo -e "---------------------------------------------------------------------------------[START DAEMON]"
+  supervisorctl tail daemon | tail -n${LINE}
+  echo -e "-----------------------------------------------------------------------------------[END DAEMON]"
+  echo -e "| CHECKING BLOCKBOOK LOGS..."
+  echo -e "------------------------------------------------------------------------------[START BLOCKBOOK]"
+  supervisorctl tail blockbook | tail -n${LINE}
+  echo -e "--------------------------------------------------------------------------------[END BLOCKBOOK]"
+  echo -e "| CHECKING DB CORRUPTION LOGS..."
+  echo -e "------------------------------------------------------------------------------[START CORRUPTION]"
+  supervisorctl tail db_corruption | tail -n${LINE}
+  echo -e "--------------------------------------------------------------------------------[END CORRUPTION]"
+  
+  if [[ -f $CONFIG_DIR/backend/debug.log ]]; then
+    echo -e "| File: $CONFIG_DIR/backend/debug.log"
+    echo -e "-----------------------------------------------------------------------------------------------"
+    cat $CONFIG_DIR/backend/debug.log | tail -n${LINE}
+    echo -e "------------------------------------------------------------------------------------------[END]"
+  fi
+  if [[ -f $CONFIG_DIR/backend/$COIN.log ]]; then
+    echo -e "| File: $CONFIG_DIR/backend/$COIN.log"
+    echo -e "-----------------------------------------------------------------------------------------------"
+    cat $CONFIG_DIR/backend/$COIN.log | tail -n${LINE}
+    echo -e "------------------------------------------------------------------------------------------[END]"
+  fi
+  echo -e "| HEALTH CHECKING ..."
+  echo -e "----------------------------------------------------------------------------------------------"
+  echo -n "| "
+  ./check-health.sh
+  echo -e "----------------------------------------------------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "backend_backup" ]]; then
+  echo -e "| BLOCKBOOK BACKEND BACKUP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Checking backup file..."
+  if [[ -f $BOOTSTRAP_PATH//backend-$COIN-backup.tar.gz ]]; then
+    rm -rf  $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz
+  fi
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon > /dev/null 2>&1
+  cd $CONFIG_DIR
+  tar_file_pack "backend" "/root/backend-$COIN-backup.tar.gz"
+  if [[ -f $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz ]]; then
+   echo -e "| Backup archive created, path: $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz"
+  else
+   echo -e "| Backup not created, operation failed..."
+  fi
+  echo -e "| Starting daemon service..."
+  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "backend_restore" ]]; then
+  echo -e "| BLOCKBOOK BACKEND RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  
+  if [[ "$2" == "-remote" && "$3" != "" ]]; then
+   if [[ -f $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz ]]; then
+     rm -rf $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz
+   fi
+   cd $BOOTSTRAP_PATH
+   if [[ "$3" == "auto" ]]; then
+     auto_restore "backend"
+   else
+     URL=$3
+   fi
+   
+   echo -e "| Downloading file: $URL"
+   wget -q --show-progress -c -t 5 $URL -O backend-$COIN-backup.tar.gz
+   if [[ $? -ne 0 ]]; then
+    echo -e "| Download archive backup failed, operation aborted..."
+    rm -rf $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz
+    echo -e "--------------------------------------------------"
+    exit
+   fi
+  else
+   echo -e "| Checking backup file..."
+   if [[ ! -f $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz ]]; then
+     echo -e "| Backup file not exist, operation aborted..."
+     echo -e "--------------------------------------------------"
+     exit
+   fi
+  fi
+  cd $CONFIG_DIR
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Cleaning backend datadir..."
+  rm -rf $CONFIG_DIR/backend
+  tar_file_unpack "$BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz" "$CONFIG_DIR/backend"
+  if [[ -d $CONFIG_DIR ]]; then
+   echo -e "| Restore finished, source: $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz"
+  else
+   echo -e "| Restore failed..."
+   mkdir -p $CONFIG_DIR/backend
+  fi
+  rm -rf $BOOTSTRAP_PATH/backend-$COIN-backup.tar.gz
+  echo -e "| Starting daemon service..."
+  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "backup_share" ]]; then
+  echo -e "| BACKEND BACKUP HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  if [[ -d $BOOTSTRAP_PATH ]]; then
+    echo -n "| "
+    cd $BOOTSTRAP_PATH
+    python3 -m http.server 1337
+  else
+    echo -e "Backup directory not exist, operation aborted..."
+  fi
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "bootstrap_clean" ]]; then
+  echo -e "| BACKEND BOOTSTRAP CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "------------------------------------------------------------"
+  echo -e "| Checking directory..."
+  if [[ -d $BOOTSTRAP_PATH ]]; then
+    cd $BOOTSTRAP_PATH
+    FILE_LIST=($(ls -p $BOOTSTRAP_PATH))
+    LENGTH=${#FILE_LIST[@]}
+    for (( j=0; j<${LENGTH}; j++ ));
+    do
+      echo -e "| File: $BOOTSTRAP_PATH/${FILE_LIST[j]} was removed!"
+      rm -rf ./${FILE_LIST[j]}
+    done
+  echo -e "| Removed $LENGTH files"
+  else
+     echo -e "| Backup archive directory not exist, operation aborted!"
+  fi
+  echo -e "------------------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "backend_clean" ]]; then
+  echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Cleaning backend datadir..."
+  rm -rf $CONFIG_DIR/backend/*
+  echo -e "| Starting daemon service..."
+  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "log_clean" ]]; then
+  CLEAN=0
+  echo -e "| LOG CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-20}
+  LOG_LIST=($(find $CONFIG_DIR/backend -type f \( -name "$COIN*.log" -o -name "debug.log" -o -name "*.log" \)))
+  LENGTH=${#LOG_LIST[@]}
+  for (( j=0; j<${LENGTH}; j++ ));
+  do
+   LOG_PATH="${LOG_LIST[$j]}"
+   if [[  $(egrep "blocks" <<< $LOG_PATH) != "" ]]; then
+     continue
+   fi
+   SIZE=$(ls -l --b=M  $LOG_PATH | cut -d " " -f5)
+   #echo -e "| File: ${LOG_PATH} SIZE: ${SIZE}"
+   if [[ $(egrep -o '[0-9]+' <<< $SIZE) -gt $LOG_SIZE_LIMIT ]]; then
+     echo -e "| FOUND: ${LOG_PATH} SIZE: ${SIZE}"
+     LOG_FILE=${LOG_PATH##*/}
+     echo -e "| File ${LOG_FILE} reached ${LOG_SIZE_LIMIT}M limit, file was cleaned!"
+     if [[ -f $LOG_PATH ]]; then
+       echo "" > $LOG_PATH > /dev/null 2>&1
+     fi
+     CLEAN=1
+   fi
+  done
+  if [[ "$CLEAN" == "0" ]]; then
+   echo -e "| All logs belown ${LOG_SIZE_LIMIT}M limit..."
+  fi
+  echo -e "--------------------------------------------------"
+fi
+{{end}}
