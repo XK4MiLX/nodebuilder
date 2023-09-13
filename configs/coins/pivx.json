@@ -25,8 +25,8 @@
     },
     "healthcheck": {
       "explorer_get_block_count": [
-        "$(curl -sk -m 10 https://chainz.cryptoid.info/pivx/api.dws?q=getblockcount)",
-        "$(curl -sk -m 10 https://zkbitcoin.com/api/ | jq .blockbook.bestHeight)"
+        "curl -sk -m 10 https://chainz.cryptoid.info/pivx/api.dws?q=getblockcount",
+        "curl -sk -m 10 https://zkbitcoin.com/api/ | jq .blockbook.bestHeight"
       ],
       "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/pivx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getinfo | jq '.blocks'",
       "logs_redirect": false
