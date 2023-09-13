@@ -6,7 +6,7 @@
     "alias": "pivx"
   },
   "ports": {
-    "backend_rpc": 8049,
+    "backend_rpc": 51472,
     "backend_message_queue": 38349
   },
   "ipc": {
@@ -19,6 +19,30 @@
   "backend": {
     "package_name": "backend-pivx",
     "system_user": "pivx",
+    "node_type": "masternode",
+    "masternode": {
+    "key_word": "masternodeprivkey"
+    },
+    "healthcheck": {
+      "explorer_get_block_count": [
+        "curl -SsL -m 10 https://chainz.cryptoid.info/pivx/api.dws?q=getblockcount",
+        "curl -SsL -m 10 https://explorer.pivx.link/api/status?q=getInfo | jq .blockbook.bestHeight"
+      ],
+      "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/pivx-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getinfo | jq '.blocks'",
+      "logs_redirect": false
+    },
+    "corruption": {
+      "detection": true,
+      "log_file_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log",
+      "corruption_keywords": [
+        "Corrupted",
+        "Corruption",
+        "ERROR: VerifyDB",
+        "printcrashinfo",
+        "ERROR: invalid header received",
+        "InvalidChainFound: invalid"
+      ]
+    },
     "version": "5.5.0",
     "binary_url": "https://github.com/PIVX-Project/PIVX/releases/download/v5.5.0/pivx-5.5.0-x86_64-linux-gnu.tar.gz",
     "verification_type": "sha256",
@@ -31,10 +55,12 @@
     "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
     "postinst_script_template": "HOME={{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/install-params.sh",
     "mainnet": true,
-    "server_config_file": "bitcoin_like.conf",
-    "client_config_file": "bitcoin_like_client.conf",
+    "server_config_file": "pivx.conf",
     "additional_params": {
-      "whitelist": "127.0.0.1"
+      "rpcallowip": "127.0.0.1",
+      "masternode": 1,
+      "logtimestamps": 1,
+      "maxconnections": 256
     }
   },
   "meta": {
