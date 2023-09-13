@@ -57,7 +57,6 @@
     "mainnet": true,
     "server_config_file": "pivx.conf",
     "additional_params": {
-      "rpcallowip": "127.0.0.1",
       "masternode": 1,
       "logtimestamps": 1,
       "maxconnections": 256
