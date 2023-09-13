@@ -21,9 +21,10 @@ BACKEND_SIZE=$($SUPERUSER du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk 
 {{- if .Backend.Healthcheck.ExplorerGetBlockCount }}
 NETWORK=(
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount }}
-"$({{$name}})"
+"{{$name}}"
 {{- end}}
 )
+NETWORK=($(printf '%s\n' ${NETWORK[@]} | shuf -n2))
 NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
 {{- end}}
 
