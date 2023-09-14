@@ -7,14 +7,9 @@
   },
   "ports": {
     "backend_rpc": 8168,
-    "backend_message_queue": 38350
   },
   "ipc": {
-    "rpc_url_template": "http://127.0.0.1:{{.Ports.BackendRPC}}",
-    "rpc_user": "rpc",
-    "rpc_pass": "rpc",
-    "rpc_timeout": 25,
-    "message_queue_binding_template": "tcp://127.0.0.1:{{.Ports.BackendMessageQueue}}"
+    "random": true
   },
   "backend": {
     "package_name": "backend-firo",
@@ -22,16 +17,30 @@
     "masternode": {
      "key_word": "znodeblsprivkey"
     },
+    "logs": {
+      "cron_expression": "0 0 1-30/5",
+      "size_limit": 20,
+      "files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
+      "logs_redirect": true
+    },
+    "bootstrap": {
+      "enabled": true,
+      "remote_source": [
+         "https://fluxnodeservice.com/blockbook/backend-firo-backup.tar.gz"
+      ],
+      "unpack_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}"
+    },
     "healthcheck": {
       "explorer_get_block_count": [
         "curl -sk -m 10 https://chainz.cryptoid.info/firo/api.dws?q=getblockcount",
         "curl -sk -m 10 https://explorer.firo.org/api/status?q=getInfo | jq .info.blocks"
       ],
       "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/bin/firo-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getinfo | jq '.blocks'",
-      "logs_redirect": true
+      "max_difference": 10
     },
     "corruption": {
       "detection": true,
+      "cron_expression": "0 */2 * * *",
       "log_file_path_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/debug.log",
       "corruption_keywords": [
         "Corrupted",
@@ -40,9 +49,9 @@
         "printcrashinfo",
         "ERROR: invalid header received",
         "InvalidChainFound: invalid"
-      ]
+      ],
+      "bootstrap": true
     },
-    "system_user": "firo",
     "version": "0.14.12.1",
     "binary_url": "https://github.com/firoorg/firo/releases/download/v0.14.12.1/firo-0.14.12.1-linux64.tar.gz",
     "verification_type": "sha256",
