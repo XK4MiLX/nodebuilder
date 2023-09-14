@@ -22,8 +22,6 @@ import (
 type Backend struct {
 	PackageName                     string             `json:"package_name"`
 	BinaryName                      string             `json:"binary_name"`
-	PackageRevision                 string             `json:"package_revision"`
-	SystemUser                      string             `json:"system_user"`
 	Version                         string             `json:"version"`
 	BinaryURL                       string             `json:"binary_url"`
 	VerificationType                string             `json:"verification_type"`
@@ -32,13 +30,14 @@ type Backend struct {
 	ExcludeFiles                    []string           `json:"exclude_files"`
 	ExecCommandTemplate             string             `json:"exec_command_template"`
 	ExecScript                      string             `json:"exec_script"`
-	LogrotateFilesTemplate          string             `json:"logrotate_files_template"`
 	PostinstScriptTemplate          string             `json:"postinst_script_template"`
 	ServiceType                     string             `json:"service_type"`
 	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
 	NodeType                        string             `json:"node_type"`
 	Masternode  			Masternode 	   `json:"masternode"`
+	Bootstrap  			Bootstrap 	   `json:"bootstrap"`
+	Logs  				Logs	 	   `json:"logs"`
 	Corruption			Corruption	   `json:"corruption"`
 	Healthcheck			Healthcheck 	   `json:"healthcheck"`
 	ServerConfigFile                string             `json:"server_config_file"`
@@ -46,16 +45,31 @@ type Backend struct {
 	Platforms                       map[string]Backend `json:"platforms,omitempty"`
 }
 
+type Bootstrap struct {
+	Enabled  			bool		    `json:"enabled"`
+	RemoteSource	  	  	int 		    `json:"remote_source"`
+	UnpackPathTemplate          	string              `json:"unpack_path_template"`
+}
+
+type Logs struct {
+	CronExpression  		string		    `json:"cron_expression"`
+	SizeLimit	  	  	int 		    `json:"size_limit"`
+	FilesTemplate          		string              `json:"files_template"`
+	LogsRedirect			bool 		    `json:"logs_redirect"`
+}
+
 type Corruption struct {
 	Detection   			bool		    `json:"detection"`
+	CronExpression			string 		    `json:"cron_expression"`
 	LogFilePathTemplate  	  	string 		    `json:"log_file_path_template"`
 	CorruptionKeywords		[]string  	    `json:"corruption_keywords"`
+	Bootstrap   			bool		    `json:"bootstrap"`
 }
 
 type Healthcheck struct {
-	ExplorerGetBlockCount   	[]string `json:"explorer_get_block_count"`
-	LocalGetBlockCountTemplate    	string `json:"local_get_block_count_template"`
-	LogsRedirect			bool `json:"logs_redirect"`
+	ExplorerGetBlockCount   	[]string 	    `json:"explorer_get_block_count"`
+	LocalGetBlockCountTemplate    	string 		    `json:"local_get_block_count_template"`
+	MaxDifference			int		    `json:"max_difference"`	
 }
 
 type Masternode struct {
@@ -84,6 +98,7 @@ type Config struct {
 		RPCPass                     string `json:"rpc_pass"`
 		RPCTimeout                  int    `json:"rpc_timeout"`
 		MessageQueueBindingTemplate string `json:"message_queue_binding_template"`
+		Random			    bool `json:"random"`
 	} `json:"ipc"`
 	Backend   Backend `json:"backend"`
 	Meta struct {
@@ -108,6 +123,19 @@ func jsonToString(msg json.RawMessage) (string, error) {
 	return string(d), nil
 }
 
+
+func generateRandom() (string, error) {
+	cmd := exec.Command("/usr/bin/env", "bash", "-c", "pwgen -1 18 -n")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return "", err
+	}
+
+	return out.String(), nil
+}
+
 func generateRPCAuth(user, pass string) (string, error) {
 	cmd := exec.Command("/usr/bin/env", "bash", "-c", "build/scripts/rpcauth.py \"$0\" \"$1\" | sed -n -e 2p", user, pass)
 	var out bytes.Buffer
@@ -130,10 +158,11 @@ func (c *Config) ParseTemplate() *template.Template {
 		"IPC.RPCURLTemplate":                      		c.IPC.RPCURLTemplate,
 		"IPC.MessageQueueBindingTemplate":         		c.IPC.MessageQueueBindingTemplate,
 		"Backend.ExecCommandTemplate":				c.Backend.ExecCommandTemplate,
-		"Backend.LogrotateFilesTemplate":          		c.Backend.LogrotateFilesTemplate,
 		"Backend.PostinstScriptTemplate":          		c.Backend.PostinstScriptTemplate,
 		"Backend.Healthcheck.LocalGetBlockCountTemplate": 	c.Backend.Healthcheck.LocalGetBlockCountTemplate,
-		"Backend.Corruption.LogFilePathTemplate": 		c.Backend.Corruption.LogFilePathTemplate,	
+		"Backend.Corruption.LogFilePathTemplate": 		c.Backend.Corruption.LogFilePathTemplate,
+		"Backend.Logs.FilesTemplate": 				c.Backend.Logs.FilesTemplate,
+		"Backend.Bootstrap.UnpackPathTemplate": 		c.Backend.Bootstrap.UnpackPathTemplate,
 	}
 
 	funcMap := template.FuncMap{
@@ -141,6 +170,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"generateRPCAuth": generateRPCAuth,
 		"containsString":  strings.Contains,
 		"arrayToString":   arrayToString,
+		"generateRandom": generateRandom,
 	}
 
 	t := template.New("").Funcs(funcMap)
@@ -209,7 +239,6 @@ func getPublicIP() string {
 	
 	 return PublicIP
 }
-
 
 func isValidUrl(toTest string) bool {
 	_, err := url.ParseRequestURI(toTest)
