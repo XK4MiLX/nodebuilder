@@ -9,7 +9,7 @@
     "backend_rpc": 8168
   },
   "ipc": {
-    "random": true
+    "generate_auth": true
   },
   "backend": {
     "package_name": "backend-firo",
