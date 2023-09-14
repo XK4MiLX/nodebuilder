@@ -39,7 +39,6 @@ do
 done
 NETWORK_BLOCK_HEIGHT=$(max ${FINAL[*]})
 {{- end}}
-
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   msg="Status = [FAILED]"
