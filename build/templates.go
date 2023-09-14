@@ -47,7 +47,7 @@ type Backend struct {
 
 type Bootstrap struct {
 	Enabled  			bool		    `json:"enabled"`
-	RemoteSource	  	  	int 		    `json:"remote_source"`
+	RemoteSource	  	  	string 		    `json:"remote_source"`
 	UnpackPathTemplate          	string              `json:"unpack_path_template"`
 }
 
