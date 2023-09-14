@@ -43,7 +43,7 @@ CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   msg="Status = [FAILED]"
   echo "$msg"
-  {{- if .Backend.Healthcheck.LogsRedirect }}
+  {{- if .Backend.Logs.LogsRedirect }}
   echo "$msg" >> /proc/1/fd/1
   {{- end}}
   exit 1
@@ -62,7 +62,7 @@ if egrep -o "^[0-9]+$" <<< "$NETWORK_BLOCK_HEIGHT" &>/dev/null; then
 else
   msg+=", isSynced = N/A"
   echo "$msg"
-  {{- if .Backend.Healthcheck.LogsRedirect }}
+  {{- if .Backend.Logs.LogsRedirect }}
   echo "$msg" >> /proc/1/fd/1
   {{- end}}
   exit
@@ -70,14 +70,14 @@ fi
 if [[ "$DIFF" -le 10 ]]; then
   msg+=", isSynced = [YES] (Height: $CURRENT_NODE_HEIGHT)"
   echo "$msg"
-  {{- if .Backend.Healthcheck.LogsRedirect }}
+  {{- if .Backend.Logs.LogsRedirect }}
   echo "$msg" >> /proc/1/fd/1
   {{- end}}
 else
   progress=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $CURRENT_NODE_HEIGHT $NETWORK_BLOCK_HEIGHT)
   msg+=", isSynced = [NO] (Height: $NETWORK_BLOCK_HEIGHT/$CURRENT_NODE_HEIGHT, left: $DIFF, progress: $progress%)"
   echo "$msg"
-  {{- if .Backend.Healthcheck.LogsRedirect }}
+  {{- if .Backend.Logs.LogsRedirect }}
   echo "$msg" >> /proc/1/fd/1
   {{- end}}
   exit 1
@@ -86,7 +86,7 @@ fi
 {{- else}}
 msg="Status = [HEALTCHECK DISABLED]"
 echo "$msg"
-{{- if .Backend.Healthcheck.LogsRedirect }}
+{{- if .Backend.Logs.LogsRedirect }}
 echo "$msg" >> /proc/1/fd/1
 {{- end}}
 {{- end}}
