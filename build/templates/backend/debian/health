@@ -21,15 +21,23 @@ BACKEND_SIZE=$($SUPERUSER du -sb {{.Env.BackendDataPath}}/{{.Coin.Alias}} | awk 
 {{- if .Backend.Healthcheck.ExplorerGetBlockCount }}
 NETWORK=(
 {{- range $index, $name := .Backend.Healthcheck.ExplorerGetBlockCount }}
-{{- if containsString $name "$" }}
 "{{$name}}"
-{{- else}}
-"$({{$name}})"
-{{- end}}
 {{- end}}
 )
-NETWORK=($(printf '%s\n' ${NETWORK[@]} | shuf -n2))
-NETWORK_BLOCK_HEIGHT=$(max ${NETWORK[*]})
+length=${#NETWORK[@]}
+for (( j=0; j<length; j++ ));
+do
+  MOD=$(sed 's/ /_/g' <<< "${NETWORK[j]}")
+  NEW+=($MOD)
+done
+TMP=($(shuf -e ${NEW[@]} -n2))
+length=${#TMP[@]}
+for (( j=0; j<length; j++ ));
+do
+  MOD=$(sed 's/_/ /g' <<< "${TMP[j]}")
+  FINAL+=($(eval $MOD))
+done
+NETWORK_BLOCK_HEIGHT=$(max ${FINAL[*]})
 {{- end}}
 
 CURRENT_NODE_HEIGHT=$({{template "Backend.Healthcheck.LocalGetBlockCountTemplate" .}})
