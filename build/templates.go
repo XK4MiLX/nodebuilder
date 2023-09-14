@@ -98,7 +98,7 @@ type Config struct {
 		RPCPass                     string `json:"rpc_pass"`
 		RPCTimeout                  int    `json:"rpc_timeout"`
 		MessageQueueBindingTemplate string `json:"message_queue_binding_template"`
-		Random			    bool `json:"random"`
+		GenerateAuth		    bool   `json:"generate_auth"`
 	} `json:"ipc"`
 	Backend   Backend `json:"backend"`
 	Meta struct {
