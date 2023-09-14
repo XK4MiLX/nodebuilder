@@ -6,7 +6,7 @@
     "alias": "firo"
   },
   "ports": {
-    "backend_rpc": 8168,
+    "backend_rpc": 8168
   },
   "ipc": {
     "random": true
