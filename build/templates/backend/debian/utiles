@@ -3,6 +3,7 @@
 CONFIG_DIR="{{.Env.BackendDataPath}}/{{.Coin.Alias}}"
 COIN="{{.Coin.Alias}}"
 BOOTSTRAP_PATH="{{.Env.BackendDataPath}}/{{.Coin.Alias}}/bootstrap"
+LOG_SIZE_LIMIT="{{.Backend.Logs.SizeLimit}}"
 
 function tar_file_pack() {
 	echo -e "| Creating archive file..."
@@ -214,13 +215,13 @@ if [[ "$1" == "log_clean" ]]; then
   CLEAN=0
   echo -e "| LOG CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
-  LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-20}
-  LOG_LIST=($(find $CONFIG_DIR/backend -type f \( -name "$COIN*.log" -o -name "debug.log" -o -name "*.log" \)))
+  LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-25}
+  LOG_LIST=($(find $CONFIG_DIR/backend/*.log -type f))
   LENGTH=${#LOG_LIST[@]}
   for (( j=0; j<${LENGTH}; j++ ));
   do
    LOG_PATH="${LOG_LIST[$j]}"
-   if [[  $(egrep "blocks" <<< $LOG_PATH) != "" ]]; then
+   if [[  $(egrep "blocks|db.log" <<< $LOG_PATH) != "" ]]; then
      continue
    fi
    SIZE=$(ls -l --b=M  $LOG_PATH | cut -d " " -f5)
