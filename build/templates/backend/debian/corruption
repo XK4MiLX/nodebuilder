@@ -3,28 +3,56 @@
 set -e
 
 {{ if .Backend.Corruption.Detection -}}
-echo -e "----------------------------------------------------------------"
-echo -e "| Checking backend logs...."
+echo -e "----------------------------------------------------------------" 
+echo -e "Checking backend logs...."
+{{- if .Backend.Logs.LogsRedirect }}
+echo -e "----------------------------------------------------------------" >> /proc/1/fd/1
+echo -e "Checking backend logs...." >> /proc/1/fd/1
+{{- end}}
 if [[ -f {{template "Backend.Corruption.LogFilePathTemplate" .}} ]]; then
   corruption=$(egrep -ao "{{ arrayToString .Backend.Corruption.CorruptionKeywords }}" {{template "Backend.Corruption.LogFilePathTemplate" .}})
   if [[ "$corruption" != "" ]]; then
-    echo -e "| Backend Corruption detected!..."
-    echo -e "| Stopping backend service..."
-    #supervisorctl stop daemon > /dev/null 2>&1
-    echo -e "| Removing backend directory contents..."
-    #rm -rf {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*
-    #echo -e "| Starting backend service..."
-    #supervisorctl start daemon > /dev/null 2>&1
+    echo -e "Backend Corruption detected!..."
+    echo -e "Stopping backend service..."
+    {{- if .Backend.Logs.LogsRedirect }}
+    echo -e "Backend Corruption detected!..."  >> /proc/1/fd/1
+    echo -e "Stopping backend service..."  >> /proc/1/fd/1
+    {{- end}}
+    supervisorctl stop daemon > /dev/null 2>&1
+    echo -e "Removing backend directory contents..."
+    {{- if .Backend.Logs.LogsRedirect }}
+    echo -e "Removing backend directory contents..." >> /proc/1/fd/1
+    {{- end}}
+    rm -rf {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*
+    echo -e "Starting backend service..."
+    {{- if .Backend.Logs.LogsRedirect }}
+    echo -e "Starting backend service..." >> /proc/1/fd/1
+    {{- end}}
+    supervisorctl start daemon > /dev/null 2>&1
   else
-    echo -e "| Corruption NOT detected, all looks fine ;)"
+    echo -e "Corruption NOT detected, all looks fine ;)"
+    {{- if .Backend.Logs.LogsRedirect }}
+    echo -e "Corruption NOT detected, all looks fine ;)" >> /proc/1/fd/1
+    {{- end}}
   fi
 else
-  echo -e "| File does not exists, operation aborted...."
+  echo -e "File does not exists, operation aborted...."
+  {{- if .Backend.Logs.LogsRedirect }}
+  echo -e "File does not exists, operation aborted...." >> /proc/1/fd/1
+  {{- end}}
 fi
 echo -e "----------------------------------------------------------------[END]"
+{{- if .Backend.Logs.LogsRedirect }}
+echo -e "----------------------------------------------------------------[END]" >> /proc/1/fd/1
+{{- end}}
 {{ else }}
 echo -e "----------------------------------------------------------------"
-echo -e "| Corruption check [DISABLED]...."
+echo -e "Corruption check [DISABLED]...."
 echo -e "----------------------------------------------------------------"
+{{- if .Backend.Logs.LogsRedirect }}
+echo -e "----------------------------------------------------------------" >> /proc/1/fd/1
+echo -e "Corruption check [DISABLED]...." >> /proc/1/fd/1
+echo -e "----------------------------------------------------------------" >> /proc/1/fd/1
+{{- end}}
 {{ end }}
 {{ end }}
