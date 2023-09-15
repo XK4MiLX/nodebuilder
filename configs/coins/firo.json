@@ -66,7 +66,7 @@
     "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
     "postinst_script_template": "",
     "mainnet": true,
-    "server_config_file": "bitcoin_like.conf",
+    "server_config_file": "bitcoin_type.conf",
     "additional_params": {
       "deprecatedrpc": "estimatefee"
     }
