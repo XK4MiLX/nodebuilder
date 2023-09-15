@@ -61,10 +61,6 @@ if [[ "$1" == "logs" ]]; then
   echo -e "| CHECKING DAEMON LOGS..."
   echo -e "---------------------------------------------------------------------------------[START DAEMON]"
   supervisorctl tail daemon | tail -n${LINE}
-  echo -e "-----------------------------------------------------------------------------------[END DAEMON]"
-  echo -e "| CHECKING BLOCKBOOK LOGS..."
-  echo -e "------------------------------------------------------------------------------[START BLOCKBOOK]"
-  supervisorctl tail blockbook | tail -n${LINE}
   echo -e "--------------------------------------------------------------------------------[END BLOCKBOOK]"
   echo -e "| CHECKING DB CORRUPTION LOGS..."
   echo -e "------------------------------------------------------------------------------[START CORRUPTION]"
