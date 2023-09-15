@@ -1,0 +1,96 @@
+{{define "main" -}}
+#!/usr/bin/env bash
+CONFIG_DIR="{{.Env.BackendDataPath}}/{{.Coin.Alias}}"
+COIN="{{.Coin.Alias}}"
+BOOTSTRAP_PATH="{{.Env.BackendDataPath}}/{{.Coin.Alias}}/bootstrap"
+UNPACK_PATH="{{template "Backend.Bootstrap.UnpackPathTemplate" .}}"
+
+function tar_file_unpack()
+{
+    echo -e "| Unpacking bootstrap archive file..."
+    pv $1 | tar -zx -C $2
+}
+
+function cdn_speedtest() {
+        if [[ -z $1 || "$1" == "0" ]]; then
+                dTime="6"
+        else
+                dTime="$1"
+        fi
+        msg="$2"
+        shift
+        rand_by_domain=("$@")
+        size_list=()
+        i=0
+        len=${#rand_by_domain[@]}
+        echo -e "| Running quick download speed test for ${COIN} bootstrap, Servers: $len"
+        start_test=`date +%s`
+        while [ $i -lt $len ];
+        do
+                testing=$(curl -m ${dTime} ${rand_by_domain[$i]} --output testspeed -fail --silent --show-error 2>&1)
+                testing_size=$(grep -Po "\d+" <<< "$testing" | paste - - - - | awk '{printf  "%d\n",$3}')
+                mb=$(bc <<<"scale=2; $testing_size / 1048576 / $dTime" | awk '{printf "%2.2f\n", $1}')
+                echo -e "| URL - ${rand_by_domain[$i]} - Bits Downloaded: $testing_size Average speed: $mb MB/s"
+                size_list+=($testing_size)
+                if [[ "$testing_size" == "0" ]]; then
+                  failed_counter=$(($failed_counter+1))
+                fi
+                i=$(($i+1))
+        done
+        rServerList=$((${#size_list[@]}-$failed_counter))
+        echo -e "| Valid servers: ${rServerList} - Duration: $((($(date +%s)-$start_test)/60)) min. $((($(date +%s)-$start_test) % 60)) sec."
+        rm -rf testspeed > /dev/null 2>&1
+        if [[ "$rServerList" == "0" ]]; then
+        server_offline="1"
+        return
+        fi
+        arr_max=$(printf '%s\n' "${size_list[@]}" | sort -n | tail -1)
+        for i in "${!size_list[@]}"; do
+                [[ "${size_list[i]}" == "$arr_max" ]] &&
+                max_indexes+=($i)
+        done
+        server_index=${rand_by_domain[${max_indexes[0]}]}
+        DOWNLOAD_URL="${server_index}"
+        mb=$(bc <<<"scale=2; $arr_max / 1048576 / $dTime" | awk '{printf "%2.2f\n", $1}')
+        echo -e "| Best server is: ${DOWNLOAD_URL} Average speed: $mb MB/s"
+}
+
+{{- if .Backend.Bootstrap.Enabled}}
+echo -e "| Bootstraping status: [ENABLE]"
+echo -e "---------------------------------------------------"
+B_SERVERS_LIST=(
+{{- range $index, $name := .Backend.Bootstrap.RemoteSource }}
+"{{$name}}"
+{{- end}}
+)
+
+mkdir -p $BOOTSTRAP_PATH > /dev/null 2>&1
+if [[ ! -f $BOOTSTRAP_PATH/BOOTSTRAP_LOCKED ]]; then
+    cdn_speedtest "$B_TIMEOUT" "${B_SERVERS_LIST[@]}"
+    BOOTSTRAP_FILE=${DOWNLOAD_URL##*/}
+    if [[ "$server_offline" == "1" ]]; then
+      echo -e "| All Bootstrap server offline, operation aborted.." && sleep 1
+      echo -e "---------------------------------------------------"
+    else
+      cd $BOOTSTRAP_PATH
+      start_download=`date +%s`
+      echo -e "| Downloading File: $DOWNLOAD_URL"
+      wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
+      echo -e "| Download duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
+      start_unzip=`date +%s`
+      mkdir -p /root/$CONFIG_DIR/backend  > /dev/null 2>&1
+      tar_file_unpack "$BOOTSTRAP_PATH/$BOOTSTRAP_FILE" "$UNPACK_PATH"
+      echo -e "| Unzip duration: $((($(date +%s)-$start_unzip)/60)) min. $((($(date +%s)-$start_unzip) % 60)) sec."
+      echo -e "| Bootstraping duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
+      echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
+      rm -rf $BOOTSTRAP_PATH/$BOOTSTRAP_FILE
+      echo -e "---------------------------------------------------"
+      sleep 2
+   fi
+ fi
+{{- else}}
+echo -e "| Bootstraping status: [DISABLE]"
+echo -e "---------------------------------------------------"
+{{- end}}
+
+{{end}}
