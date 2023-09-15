@@ -7,14 +7,23 @@ if [[ "$(whoami)" != root ]]; then
 fi
 
 echo -e "Creating directory..."
+{{- if .Backend.Logs.LogsRedirect }}
+ echo -e "Creating directory..." >> /proc/1/fd/1
+{{- end}}
 $SUPERUSER mkdir -p {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend
 $SUPERUSER mkdir -p {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 $SUPERUSER mkdir -p /run/{{.Coin.Alias}}
 echo -e "Copying files..."
+{{- if .Backend.Logs.LogsRedirect }}
+ echo -e "Copying files..." >> /proc/1/fd/1
+{{- end}}
 $SUPERUSER cp -rf backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
 {{if .Backend.ServerConfigFile}}$SUPERUSER cp -rf server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf{{end}}
 {{if .Backend.ExecScript }}$SUPERUSER cp -rf exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
 echo -e "Cleaning..."
+{{- if .Backend.Logs.LogsRedirect }}
+ echo -e "Cleaning..." >> /proc/1/fd/1
+{{- end}}
 rm -rf backend
 $SUPERUSER bash -c "debian/postinst"
 
