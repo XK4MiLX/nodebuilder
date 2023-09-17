@@ -91,7 +91,7 @@ type Config struct {
 		BackendRPC          int `json:"backend_rpc"`
 		BackendMessageQueue int `json:"backend_message_queue"`
 		BackendP2P          int `json:"backend_p2p"`
-		BackendHttp         int `json:"backend_http,required"`
+		BackendHttp         int `json:"backend_http"`
 		BackendAuthRpc      int `json:"backend_authrpc"`
 	} `json:"ports"`
 	IPC struct {
@@ -114,34 +114,6 @@ type Config struct {
 		BackendDataPath      string `json:"backend_data_path"`
 		Architecture         string `json:"architecture"`
 	} `json:"-"`
-}
-
-func ImprovedJsonUnmarshal[T any](target *T, data []byte) []error {
-
-     err := json.Unmarshal(data, target)
-     if err != nil {
-	return []error{err}
-     }
-
-     errorList := make([]error,0)
-     fields := reflect.ValueOf(target).Elem()
-
-     for i := 0; i < fields.NumField(); i++ {
-	jsonTags := fields.Type().Field(i).Tag.Get("json")
-
-	if strings.Contains(jsonTags, "required") && fields.Field(i).IsZero() {
-	    errorList = append(
-	                  errorList,
-			  errors.New(fmt.Sprintf("required field '%s' is missing.", fields.Type().Field(i).Name)),
-			)
-	}
-}
-
-if len(errorList) != 0 {
-   return errorList
-}
-
-return nil
 }
 
 
@@ -349,15 +321,6 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 		default:
 			return nil, fmt.Errorf("Invalid verification type: %s", config.Backend.VerificationType)
 		}
-	}
-
-
-	result, _ := json.Marshal(config)
-	var dudeUnmarshal Backend
-	err = ImprovedJsonUnmarshal(&dudeUnmarshal, result)
-
-	if err != nil {
-	   log.Fatal(fmt.Errorf("okay, let me exit right here because: %v", err))
 	}
 
 	return config, nil
