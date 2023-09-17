@@ -352,7 +352,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 	}
 
 	var dudeUnmarshal Backend
-	err := ImprovedJsonUnmarshal(&dudeUnmarshal, config)
+	err = ImprovedJsonUnmarshal(&dudeUnmarshal, config)
 
 	if err != nil {
 	   log.Fatal(fmt.Errorf("okay, let me exit right here because: %v", err))
