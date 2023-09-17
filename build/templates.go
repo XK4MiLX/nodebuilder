@@ -16,6 +16,8 @@ import (
         "net/url"
 	"net"
 	"strings"
+	"errors"
+	"log"
 )
 
 // Backend contains backend specific fields
