@@ -351,7 +351,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 		}
 	}
 
-	var dudeUnmarshal Dude
+	var dudeUnmarshal Backend
 	err := ImprovedJsonUnmarshal(&dudeUnmarshal, config)
 
 	if err != nil {
