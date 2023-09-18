@@ -16,7 +16,7 @@ import (
         "net/url"
 	"net"
 	"strings"
-	"errors"
+	//"errors"
 	//"log"
 
 )
