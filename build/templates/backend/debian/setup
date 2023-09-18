@@ -18,7 +18,7 @@ echo -e "Copying files..."
  echo -e "Copying files..." >> /proc/1/fd/1
 {{- end}}
 $SUPERUSER cp -rf backend/* {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
-$SUPERUSER chmod +x {{.Env.BackendInstallPath}}/{{.Coin.Alias}}
+$SUPERUSER chmod +x {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/*
 {{if .Backend.ServerConfigFile}}$SUPERUSER cp -rf server.conf {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf{{end}}
 {{if .Backend.ExecScript }}$SUPERUSER cp -rf exec.sh  {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}_exec.sh{{end}}
 echo -e "Cleaning..."
