@@ -116,6 +116,36 @@ type Config struct {
 }
 
 
+
+func ImprovedJsonUnmarshal[T any](target *T, data []byte) []error {
+     err := json.Unmarshal(data, target)
+     if err != nil {
+	return []error{err}
+     }
+
+     errorList := make([]error,0)
+     fields := reflect.ValueOf(target).Elem()
+
+     for i := 0; i < fields.NumField(); i++ {
+	jsonTags := fields.Type().Field(i).Tag.Get("json")
+
+	if strings.Contains(jsonTags, "required") && fields.Field(i).IsZero() {
+	    errorList = append(
+	                  errorList,
+			  errors.New(fmt.Sprintf("required field '%s' is missing.", fields.Type().Field(i).Name)),
+			)
+	}
+}
+
+if len(errorList) != 0 {
+   return errorList
+}
+
+return nil
+}
+
+
+
 func jsonToString(msg json.RawMessage) (string, error) {
 	d, err := msg.MarshalJSON()
 	if err != nil {
@@ -275,6 +305,11 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
     		defer resp.Body.Close()
                 d = json.NewDecoder(resp.Body)
 	}
+
+
+
+//
+
 	
 	err := d.Decode(config)
 	if err != nil {
@@ -322,6 +357,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 		}
 	}
 
+	fmt.Printf("%s", config)
 	return config, nil
 }
 
