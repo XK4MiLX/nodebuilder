@@ -21,7 +21,7 @@
       "cron_expression": "0 0 1-30/5",
       "size_limit": 20,
       "files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/*.log",
-      "logs_redirect": true
+      "logs_redirect": false
     },
     "bootstrap": {
       "enabled": false,
