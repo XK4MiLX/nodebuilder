@@ -32,7 +32,7 @@
       "explorer_get_block_count": [
         "https://explorer.neoxa.net/api/getblockcount"
       ],
-      "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/neoxa-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getinfo | jq '.blocks'",
+      "local_get_block_count_template":  "{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/neoxa-cli -conf={{.Env.BackendInstallPath}}/{{.Coin.Alias}}/{{.Coin.Alias}}.conf getblockchaininfo | jq '.blocks'",
       "max_difference": 10
     },
     "corruption": {
