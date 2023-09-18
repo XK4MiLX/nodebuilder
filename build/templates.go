@@ -359,7 +359,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 		}
 	}
 
-	fmt.Printf("%s", *config)
+	fmt.Fprintf(w, "%+v", config)
 	return config, nil
 }
 
