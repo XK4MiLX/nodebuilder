@@ -18,13 +18,7 @@ all:
 {{- end}}
 	mkdir backend
 	{{.Backend.ExtractCommand}} ${ARCHIVE}
-	chmod 755 debian/utiles
-	chmod 755 debian/bootstrap
-	chmod 755 debian/corruption
-	chmod 755 debian/health
-	chmod 755 debian/setup
-	chmod 755 debian/postinst
-	chmod 755 debian/run
+	chmod 755 debian/*
 {{- if .Backend.ExcludeFiles}}
 	# generated from exclude_files
 {{- range $index, $name := .Backend.ExcludeFiles}}
