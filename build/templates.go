@@ -177,7 +177,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"arrayToString":   	arrayToString,
 		"generateRandom": 	generateRandom,
 		"getPublicIP": 		getPublicIP,
-		//"getEnv":		getEnv,			
+		"getEnv":		getEnv,			
 	}
 
 	t := template.New("").Funcs(funcMap)
