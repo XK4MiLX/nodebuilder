@@ -72,6 +72,7 @@ type Healthcheck struct {
 }
 
 type Masternode struct {
+	KeyValue    	string `json:"-"`
 	KeyWord     	string `json:"key_word"`
 }
 
