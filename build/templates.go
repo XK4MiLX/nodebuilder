@@ -176,7 +176,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"containsString":  	strings.Contains,
 		"arrayToString":   	arrayToString,
 		"generateRandom": 	generateRandom,
-		//"getPublicIP": 		getPublicIP,
+		"getPublicIP": 		getPublicIP,
 		//"getEnv":		getEnv,			
 	}
 
