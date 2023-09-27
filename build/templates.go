@@ -124,6 +124,12 @@ func jsonToString(msg json.RawMessage) (string, error) {
 	return string(d), nil
 }
 
+func printEnv(v string) {
+	ge := os.Getenv(v)
+	le, ok := os.LookupEnv(v)
+	fmt.Printf("Getenv(%[1]q) => %[2]q\nLookupEnv(%[1]q) => (%[3]q, %[4]t)\n\n", v, ge, le, ok)
+}
+
 
 func generateRandom() (string, error) {
 	cmd := exec.Command("/usr/bin/env", "bash", "-c", "pwgen -1 18 -n")
@@ -172,6 +178,7 @@ func (c *Config) ParseTemplate() *template.Template {
 		"containsString":  strings.Contains,
 		"arrayToString":   arrayToString,
 		"generateRandom": generateRandom,
+		"getPublicIP": getPublicIP,
 	}
 
 	t := template.New("").Funcs(funcMap)
@@ -292,7 +299,7 @@ func LoadConfig(configsDir, coin string, url string) (*Config, error) {
 
 	config.Meta.BuildDatetime = time.Now().Format("Mon, 02 Jan 2006 15:04:05 -0700")
 	config.Env.Architecture = runtime.GOARCH
-	config.Backend.PublicIP = getPublicIP()
+	//config.Backend.PublicIP = getPublicIP()
 	if os.Getenv("KEY") != "" {
 	  config.Backend.Masternode.KeyValue = os.Getenv("KEY")
         }
