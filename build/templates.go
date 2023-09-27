@@ -32,7 +32,6 @@ type Backend struct {
 	ExecScript                      string             `json:"exec_script"`
 	PostinstScriptTemplate          string             `json:"postinst_script_template"`
 	ServiceType                     string             `json:"service_type"`
-	PublicIP                        string             `json:"-"`
 	Mainnet                         bool               `json:"mainnet"`
 	NodeType                        string             `json:"node_type"`
 	Masternode  			Masternode 	   `json:"masternode"`
