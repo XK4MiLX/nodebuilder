@@ -123,10 +123,9 @@ func jsonToString(msg json.RawMessage) (string, error) {
 	return string(d), nil
 }
 
-func printEnv(v string) {
-	ge := os.Getenv(v)
-	le, ok := os.LookupEnv(v)
-	fmt.Printf("Getenv(%[1]q) => %[2]q\nLookupEnv(%[1]q) => (%[3]q, %[4]t)\n\n", v, ge, le, ok)
+func getEnv(key string) string {
+	ge := os.Getenv(key)
+	return string(ge)
 }
 
 
@@ -172,12 +171,13 @@ func (c *Config) ParseTemplate() *template.Template {
 	}
 
 	funcMap := template.FuncMap{
-		"jsonToString":    jsonToString,
-		"generateRPCAuth": generateRPCAuth,
-		"containsString":  strings.Contains,
-		"arrayToString":   arrayToString,
-		"generateRandom": generateRandom,
-		"getPublicIP": getPublicIP,
+		"jsonToString":    	jsonToString,
+		"generateRPCAuth": 	generateRPCAuth,
+		"containsString":  	strings.Contains,
+		"arrayToString":   	arrayToString,
+		"generateRandom": 	generateRandom,
+		"getPublicIP": 		getPublicIP,
+		"getEnv":		getEnv,			
 	}
 
 	t := template.New("").Funcs(funcMap)
